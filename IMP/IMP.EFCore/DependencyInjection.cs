@@ -12,6 +12,8 @@ namespace IMP.EFCore
 
             services.AddDbContext<AppDbContext>(opt => opt.UseNpgsql(configuration.GetConnectionString("AppDB")));
 
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
             return services;
         }
     }

@@ -21,6 +21,10 @@ namespace IMP.EFCore
 
         [StringLength(100)]
         public string? Address { get; set; }
+
+        public DateTime CreatedAt { get; set; }
+
+        public DateTime LastUpdatedAt { get; set; }
     }
 
     public class UserAuthDto
@@ -51,6 +55,7 @@ namespace IMP.EFCore
 
         [Required]
         [StringLength(50, MinimumLength = 8)]
+        [RegularExpression(AppConstants.Password.Regex, ErrorMessage = AppConstants.Password.ErrorMessage)]
         public string Password { get; set; } = null!;
     }
 

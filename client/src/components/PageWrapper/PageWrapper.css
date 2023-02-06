@@ -1,0 +1,11 @@
+.page-wrapper {
+    overflow-y: scroll;
+    height: 100vh;
+    padding-bottom: 3rem;
+}
+
+@media screen and (min-width: 1024px) {
+    .page-wrapper {
+        padding-bottom: 0;
+    }
+}

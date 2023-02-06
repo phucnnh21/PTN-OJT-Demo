@@ -26,13 +26,13 @@ namespace IMP.AppServices
             UserPaginationDbDto userPaginationDbDto = _mapper.Map<UserPaginationDbDto>(userPagination);
 
             // Filter by role
-            if (userPagination.Role is not null)
+            if (!String.IsNullOrWhiteSpace(userPagination.Role))
             {
                 userPaginationDbDto.Expression = Utils.ConcatLambdaExpression<User>(userPaginationDbDto.Expression, u => u.Role.ToLower() == userPagination.Role.ToLower());
             }
 
             // Search
-            if (userPagination.Keyword is not null)
+            if (!String.IsNullOrWhiteSpace(userPagination.Keyword))
             {
                 userPaginationDbDto.Expression = Utils.ConcatLambdaExpression<User>(userPaginationDbDto.Expression, u => u.Name.ToLower().Contains(userPagination.Keyword.ToLower()));
             }

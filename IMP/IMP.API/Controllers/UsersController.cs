@@ -1,6 +1,8 @@
 ﻿using IMP.AppServices;
 using IMP.EFCore;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace IMP.API.Controllers
 {
@@ -28,6 +30,7 @@ namespace IMP.API.Controllers
             return Ok(user);
         }
 
+        [Authorize(Roles = UserRole.ADMIN)]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
@@ -41,6 +44,7 @@ namespace IMP.API.Controllers
             return Ok();
         }
 
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] UserUpdateDto userUpdate)
         {

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
@@ -23,7 +24,9 @@ namespace IMP.EFCore.Migrations
                     Email = table.Column<string>(type: "text", nullable: false),
                     Password = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     Role = table.Column<string>(type: "text", nullable: false),
-                    Address = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true)
+                    Address = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    LastUpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -32,11 +35,11 @@ namespace IMP.EFCore.Migrations
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "Address", "Email", "Name", "Password", "Role" },
+                columns: new[] { "Id", "Address", "CreatedAt", "Email", "LastUpdatedAt", "Name", "Password", "Role" },
                 values: new object[,]
                 {
-                    { 1, null, "admin@gmail.com", "Admin", "e6e061838856bf47e1de730719fb2609", "admin" },
-                    { 2, null, "user@gmail.com", "User", "e6e061838856bf47e1de730719fb2609", "user" }
+                    { 1, null, new DateTime(2023, 2, 4, 20, 47, 55, 120, DateTimeKind.Local).AddTicks(3628), "admin@gmail.com", new DateTime(2023, 2, 4, 20, 47, 55, 120, DateTimeKind.Local).AddTicks(3638), "Admin", "e6e061838856bf47e1de730719fb2609", "admin" },
+                    { 2, null, new DateTime(2023, 2, 4, 20, 47, 55, 120, DateTimeKind.Local).AddTicks(3641), "user@gmail.com", new DateTime(2023, 2, 4, 20, 47, 55, 120, DateTimeKind.Local).AddTicks(3641), "User", "e6e061838856bf47e1de730719fb2609", "user" }
                 });
         }
 

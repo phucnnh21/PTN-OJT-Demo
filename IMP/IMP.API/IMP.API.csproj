@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+	<PackageReference Include="Hangfire.AspNetCore" Version="1.7.31" />
+	<PackageReference Include="Hangfire.Core" Version="1.7.31" />
+	<PackageReference Include="Hangfire.Dashboard.Basic.Authentication" Version="5.0.0" />
+	<PackageReference Include="Hangfire.PostgreSql" Version="1.9.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.13" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 

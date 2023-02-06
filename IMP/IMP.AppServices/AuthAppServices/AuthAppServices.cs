@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using IMP.AppServices.Helpers;
 using IMP.EFCore;
 using IMP.Infrastructure;
 using System.Security.Claims;
@@ -9,11 +10,13 @@ namespace IMP.AppServices
     {
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
+        private readonly IJwtGenerator _jwtGenerator;
 
-        public AuthAppServices(IUserRepository userRepository, IMapper mapper)
+        public AuthAppServices(IUserRepository userRepository, IMapper mapper, IJwtGenerator jwtGenerator)
         {
             _userRepository = userRepository;
             _mapper = mapper;
+            _jwtGenerator = jwtGenerator;
         }
 
         public async Task<AuthReponseDto?> Login(AuthRequestDto authRequest)
@@ -37,7 +40,7 @@ namespace IMP.AppServices
                 new Claim(ClaimTypes.Role, userFromRepo.Role)
             };
 
-            string accessToken = JwtGenerator.GenerateToken(claims, 2 * 24 * 60); // 2 days
+            string accessToken = _jwtGenerator.GenerateToken(claims, 2 * 24 * 60); // 2 days
 
             // Map user data for front-end display
             UserAuthDto userAuth = _mapper.Map<UserAuthDto>(userFromRepo);
@@ -51,7 +54,7 @@ namespace IMP.AppServices
             userCreate.Password = MD5Generator.Generate(userCreate.Password);
 
             // Check if email exist
-            bool userExist = (await _userRepository.GetByEmail(userCreate.Email)) is not null;
+            bool userExist = (await _userRepository.GetByCondition(u => u.Email == userCreate.Email)) is not null;
 
             if (userExist)
             {
@@ -66,6 +69,33 @@ namespace IMP.AppServices
             UserAuthDto userAuth = _mapper.Map<UserAuthDto>(userFromRepo);
 
             return new ServicesResponseDto<UserAuthDto> { Message = "User created", Status = 200, Data = userAuth };
+        }
+
+        public async Task<ServicesResponseDto<bool>> UpdatePassword(AuthPasswordUpdateDto userUpdate)
+        {
+            // Validate confirm password
+            if (userUpdate.NewPassword != userUpdate.ConfirmPassword)
+            {
+                return new ServicesResponseDto<bool> { Message = "Password confirm does not match", Status = 400 };
+            }
+
+            string oldPasswordHashed = MD5Generator.Generate(userUpdate.OldPassword); // Hash old password
+
+            var expression = Utils.ConcatLambdaExpression<User>(u => u.Id == userUpdate.Id, u => u.Password == oldPasswordHashed);
+
+            User? userFromRepo = await _userRepository.GetByCondition(expression);
+        
+            // Validate old password
+            if (userFromRepo == null)
+            {
+                return new ServicesResponseDto<bool> { Message = "Old password does not match", Status = 400 };
+            }
+
+            userFromRepo.Password = MD5Generator.Generate(userUpdate.NewPassword); // Hash password
+
+            await _userRepository.UpdateUser(userFromRepo);
+
+            return new ServicesResponseDto<bool> { Message = "Success", Status = 200 };
         }
     }
 }

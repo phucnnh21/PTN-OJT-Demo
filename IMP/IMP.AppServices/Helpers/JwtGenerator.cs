@@ -2,19 +2,23 @@
 using System.Text;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Extensions.Configuration;
+using IMP.AppServices.Helpers;
 
 namespace IMP.AppServices
 {
-    public static class JwtGenerator
+    public class JwtGenerator : IJwtGenerator
     {
-        private const string key = "this is my custom Secret key for authentication";
+        private readonly string _key = "";
 
-        public static string GenerateToken(IEnumerable<Claim> claims, uint minutes)
+        public JwtGenerator(string key) { _key = key; }
+
+        public string GenerateToken(IEnumerable<Claim> claims, uint minutes)
         {
             // Declare token and properties
             var tokenHandler = new JwtSecurityTokenHandler();
 
-            var tokenKey = Encoding.ASCII.GetBytes(key);
+            var tokenKey = Encoding.ASCII.GetBytes(_key);
 
             var tokenDescriptor = new SecurityTokenDescriptor()
             {
@@ -31,7 +35,7 @@ namespace IMP.AppServices
             return tokenHandler.WriteToken(token);
         }
 
-        public static ClaimsPrincipal GetPrincipalFromExpiredToken(string token, bool validateLifetime = false)
+        public ClaimsPrincipal GetPrincipalFromExpiredToken(string token, bool validateLifetime = false)
         {
             var tokenValidationParameters = new TokenValidationParameters
             {
@@ -40,7 +44,7 @@ namespace IMP.AppServices
                 ValidateLifetime = validateLifetime, // Validate lifetime of token
                 ValidateIssuerSigningKey = true,
                 ClockSkew = TimeSpan.Zero, // Disable default 5 mins of Microsoft
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key))
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_key))
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();

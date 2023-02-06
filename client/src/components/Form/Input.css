@@ -1,0 +1,29 @@
+.input-app {
+    box-sizing: border-box;
+    background: var(--body-bg-color);
+    border: 0.5px solid var(--border-color);
+    border-radius: 8px;
+    padding: 0.675rem;
+    color-scheme: light;
+}
+
+.input-app:focus {
+    border: 0.5px solid var(--border-color-elevate-1);
+}
+
+.input-app:focus-visible {
+    outline: 0.1px solid var(--border-color-elevate-2);
+}
+
+/* Change the white to any color */
+.input-app:-webkit-autofill,
+.input-app:-webkit-autofill:hover,
+.input-app:-webkit-autofill:focus,
+.input-app:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px white inset !important;
+    -webkit-text-fill-color: var(--teal-general-color) !important;
+}
+
+/* .input-app::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+} */

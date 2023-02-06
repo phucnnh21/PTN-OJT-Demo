@@ -1,13 +1,41 @@
+using Hangfire;
+using Hangfire.PostgreSql;
+using HangfireBasicAuthenticationFilter;
 using IMP.AppServices;
 using IMP.EFCore;
 using IMP.Infrastructure;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Cors.Infrastructure;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddDbContext(builder.Configuration);
 builder.Services.AddInfrastructureSevice();
-builder.Services.AddAppSevice();
+builder.Services.AddAppSevice(builder.Configuration);
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(opt =>
+    {
+        opt.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateLifetime = true,
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration["Jwt:Key"]))
+        };
+    });
+
+builder.Services.AddAuthorization();
+
+builder.Services.AddCors();
+
+// Hangfire
+/*builder.Services.AddHangfire(config => config.UsePostgreSqlStorage(builder.Configuration.GetConnectionString("Hangfire")));
+builder.Services.AddHangfireServer();*/
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -23,10 +51,30 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors(opt => opt.WithOrigins(builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>())
+                      .AllowAnyHeader()
+                      .AllowAnyMethod()
+                      .AllowCredentials());
+
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
+
 app.UseAuthorization();
+
+/*app.UseHangfireDashboard(
+    "/hangfire",
+    new DashboardOptions
+    {
+        Authorization = new[]  {
+                new HangfireCustomBasicAuthenticationFilter {
+                    User = builder.Configuration.GetValue<string>("HangfireSettings:UserName"),
+                    Pass = builder.Configuration.GetValue<string>("HangfireSettings:Password")
+                }
+            }
+    });*/
 
 app.MapControllers();
 
 app.Run();
+

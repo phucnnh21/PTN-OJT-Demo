@@ -19,17 +19,18 @@ namespace IMP.Infrastructure
         public async Task<User?> GetById(int id)
         {
             var user = await _dbContext.Users
-                .Select(x => new User { Id = x.Id, Name = x.Name, Role = x.Role, Email = x.Email, Address = x.Address })
-                .FirstOrDefaultAsync(x => x.Id == id);
+                .Select(u => new User { Id = u.Id, Name = u.Name, Role = u.Role, Email = u.Email, Address = u.Address, CreatedAt = u.CreatedAt, LastUpdatedAt = u.LastUpdatedAt })
+                .FirstOrDefaultAsync(u => u.Id == id);
 
             return user;
         }
 
-        public async Task<User?> GetByEmail(string email)
+        public async Task<User?> GetByCondition(Expression<Func<User, bool>> expression)
         {
             var user = await _dbContext.Users
-                .Select(x => new User { Id = x.Id, Name = x.Name, Role = x.Role, Email = x.Email })
-                .FirstOrDefaultAsync(x => x.Email == email);
+                .Where(expression)
+                .Select(u => new User { Id = u.Id, Name = u.Name, Role = u.Role, Email = u.Email, CreatedAt = u.CreatedAt })
+                .FirstOrDefaultAsync();
 
             return user;
         }
@@ -37,8 +38,8 @@ namespace IMP.Infrastructure
         public async Task<User?> GetUserAuth(string email, string hashedPassword)
         {
             var user = await _dbContext.Users
-                .Where(x => x.Email == email && x.Password == hashedPassword)
-                .Select(x => new User { Id = x.Id, Name = x.Name, Role = x.Role, Email = x.Email })
+                .Where(u => u.Email == email && u.Password == hashedPassword)
+                .Select(u => new User { Id = u.Id, Name = u.Name, Role = u.Role, Email = u.Email })
                 .FirstOrDefaultAsync();
                 
 
@@ -93,7 +94,7 @@ namespace IMP.Infrastructure
                 .Where(userPagination.Expression)
                 .Skip((userPagination.Page - 1) * userPagination.Size)
                 .Take(userPagination.Size)
-                .Select(x => new User { Id = x.Id, Name = x.Name, Role = x.Role, Email = x.Email })
+                .Select(u => new User { Id = u.Id, Name = u.Name, Role = u.Role, Email = u.Email, LastUpdatedAt = u.LastUpdatedAt })
                 .ToListAsync();
 
             return new PaginationResponseDto<User> { Payload = users, Total = count };

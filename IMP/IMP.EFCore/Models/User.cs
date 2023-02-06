@@ -24,5 +24,9 @@ namespace IMP.EFCore
 
         [StringLength(100)]
         public string? Address { get; set; }
+
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+        public DateTime LastUpdatedAt { get; set; } = DateTime.Now;
     }
 }

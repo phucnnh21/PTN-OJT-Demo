@@ -1,5 +1,6 @@
 ﻿using IMP.AppServices;
 using IMP.EFCore;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -40,6 +41,20 @@ namespace IMP.API.Controllers
             }
 
             return Ok(servicesResponse.Data);
+        }
+
+        [Authorize]
+        [HttpPut("password-update")]
+        public async Task<IActionResult> PasswordUpdate(AuthPasswordUpdateDto userUpdate)
+        {
+            ServicesResponseDto<bool> servicesResponse = await _authServices.UpdatePassword(userUpdate);
+
+            if (servicesResponse.Status is 400)
+            {
+                return BadRequest(servicesResponse.Message);
+            }
+
+            return Ok(servicesResponse.Message);
         }
     }
 }

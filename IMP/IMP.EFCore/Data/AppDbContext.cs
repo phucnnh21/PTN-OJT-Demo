@@ -19,6 +19,8 @@ namespace IMP.EFCore
 
             IConfigurationRoot configuration = builder.Build();
             optionsBuilder.UseNpgsql(configuration.GetConnectionString("AppDB"));
+
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
         }
 
         public DbSet<User> Users { get; set; }

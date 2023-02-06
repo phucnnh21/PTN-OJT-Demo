@@ -3,71 +3,64 @@
 @tailwind utilities;
 
 :root {
-    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-    line-height: 1.5;
-    font-weight: 400;
+    /* App color */
+    --body-bg-color: #fff;
+    --body-bg-color-rgb: 255, 255, 255;
 
-    color-scheme: light dark;
-    color: rgba(255, 255, 255, 0.87);
-    background-color: #242424;
+    --admin-bg-color: #f0f0f5;
+    --admin-nav-color: lavender;
+    --admin-nav-color-elevate: rgba(55, 63, 65, 0.1);
 
-    font-synthesis: none;
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    -webkit-text-size-adjust: 100%;
-}
+    --nav-bg-color: #fff;
+    --nav-border-color: rgb(0 0 0 / 8%);
 
-a {
-    font-weight: 500;
-    color: #646cff;
-    text-decoration: inherit;
-}
-a:hover {
-    color: #535bf2;
-}
+    --text-primary-color: #373f41;
+    --text-secondary-color: rgba(55, 63, 65, 0.75);
+    --text-tertiary-color: rgba(55, 63, 65, 0.5);
 
-body {
-    margin: 0;
-    display: flex;
-    place-items: center;
-    min-width: 320px;
-    min-height: 100vh;
-}
+    /* Element color */
+    --element-shadow-color: rgba(0, 0, 0, 0.15);
+    --element-bg-color: #fff;
+    --element-bg-color-elevate-1: #ededed;
+    --element-bg-color-elevate-2: #dbdbdb;
 
-h1 {
-    font-size: 3.2em;
-    line-height: 1.1;
-}
+    --post-bg-color: #fff;
+    --post-border-color: rgb(0 0 0 / 8%);
+    --post-bg-hover-color: #f8f9fa;
 
-button {
-    border-radius: 8px;
-    border: 1px solid transparent;
-    padding: 0.6em 1.2em;
-    font-size: 1em;
-    font-weight: 500;
-    font-family: inherit;
-    background-color: #1a1a1a;
-    cursor: pointer;
-    transition: border-color 0.25s;
-}
-button:hover {
-    border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-    outline: 4px auto -webkit-focus-ring-color;
-}
+    --comment-bg-body-color: #f0f2f5;
 
-@media (prefers-color-scheme: light) {
-    :root {
-        color: #213547;
-        background-color: #ffffff;
-    }
-    a:hover {
-        color: #747bff;
-    }
-    button {
-        background-color: #f9f9f9;
-    }
+    /* Border */
+    --border-width: 0.25rem;
+    --border-color: rgba(0, 0, 0, 0.15);
+    --border-color-elevate-1: #4b5156;
+    --border-color-elevate-2: #666e75;
+    --inline-color: rgba(0, 0, 0, 0.6);
+
+    /* Theme color */
+    --teal-darker-color: #0d9488;
+    --teal-general-color: #14b8a6;
+    --teal-lighter-color: #2dd4bf;
+
+    /* Support color */
+    --amber-darker-color: #d97706;
+    --amber-general-color: #f59e0b;
+    --amber-lighter-color: #fbbf24;
+
+    --red-darker-color: #e11d48;
+    --red-general-color: #f43f5e;
+    --red-lighter-color: #fb7185;
+
+    --blue-darker-color: #0891b2;
+    --blue-general-color: #06b6d4;
+    --blue-lighter-color: #22d3ee;
+
+    --white-color: #fff;
+    --black-color: #000;
+
+    /* Config vars */
+    --z-index-nav: 69;
+    --mobile-break-point: 1024px;
+
+    --toastify-color-progress-light: #14b8a6;
 }
