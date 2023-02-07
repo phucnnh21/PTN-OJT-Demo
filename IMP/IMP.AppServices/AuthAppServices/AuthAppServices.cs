@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using Hangfire;
 using IMP.AppServices.Helpers;
 using IMP.EFCore;
 using IMP.Infrastructure;
+using Microsoft.Extensions.Configuration;
 using System.Security.Claims;
 
 namespace IMP.AppServices
@@ -11,12 +13,18 @@ namespace IMP.AppServices
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
         private readonly IJwtGenerator _jwtGenerator;
+        private readonly IMailService _mailService;
+        private readonly IConfiguration _configuration;
+        private readonly IBackgroundJobClient _backgroundJobClient;
 
-        public AuthAppServices(IUserRepository userRepository, IMapper mapper, IJwtGenerator jwtGenerator)
+        public AuthAppServices(IUserRepository userRepository, IMapper mapper, IJwtGenerator jwtGenerator, IMailService mailService, IConfiguration configuration, IBackgroundJobClient backgroundJobClient)
         {
             _userRepository = userRepository;
             _mapper = mapper;
             _jwtGenerator = jwtGenerator;
+            _mailService = mailService;
+            _configuration = configuration;
+            _backgroundJobClient = backgroundJobClient;
         }
 
         public async Task<AuthReponseDto?> Login(AuthRequestDto authRequest)
@@ -50,6 +58,36 @@ namespace IMP.AppServices
 
         public async Task<ServicesResponseDto<UserAuthDto>> Signup(UserCreateDto userCreate)
         {
+            // Check if email exist
+            bool userExist = (await _userRepository.GetByCondition(u => u.Email == userCreate.Email)) is not null;
+
+            if (userExist)
+            {
+                return new ServicesResponseDto<UserAuthDto> { Message = "Email duplicated", Status = 409 };
+            }
+
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Email, userCreate.Email),
+                new Claim(ClaimTypes.Name, userCreate.Name),
+            };
+
+            string frontendBasePath = _configuration.GetValue<string>("FrontendConfig:BasePath");
+            string token = _jwtGenerator.GenerateToken(claims, 2 * 24 * 60); // 2 days
+
+            _backgroundJobClient.Enqueue(() => _mailService.SendMail(
+                new MailContent
+                {
+                    Subject = "[Demo] Email Verification",
+                    Body = $"<a href='{frontendBasePath}/password-create?token={token}'>Create password</a>",
+                    To = userCreate.Email
+                }));
+
+            return new ServicesResponseDto<UserAuthDto> { Message = "Email sent", Status = 200 };
+        }
+
+        /*public async Task<ServicesResponseDto<UserAuthDto>> Signup(UserCreateDto userCreate)
+        {
             // Hash password
             userCreate.Password = MD5Generator.Generate(userCreate.Password);
 
@@ -69,7 +107,7 @@ namespace IMP.AppServices
             UserAuthDto userAuth = _mapper.Map<UserAuthDto>(userFromRepo);
 
             return new ServicesResponseDto<UserAuthDto> { Message = "User created", Status = 200, Data = userAuth };
-        }
+        }*/
 
         public async Task<ServicesResponseDto<bool>> UpdatePassword(AuthPasswordUpdateDto userUpdate)
         {

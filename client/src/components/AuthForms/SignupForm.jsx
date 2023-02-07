@@ -20,14 +20,11 @@ const SignupForm = () => {
         resolver: yupResolver(schema),
     });
 
-    const navigate = useNavigate();
-
     // HandleSubmit
     const handleSubmitForm = (data) => {
         signUpApi(data)
             .then(() => {
-                toast.success("You are all signed up! Now you can login!");
-                navigate("/");
+                toast.success("An email has been sent to you!");
             })
             .catch((err) => {
                 toast.error(err.response.data);
@@ -53,22 +50,6 @@ const SignupForm = () => {
                 register={register("email")}
                 error={errors.email}
             />
-            <Input
-                className="py-3 w-full"
-                label="Password"
-                placeholder="Please enter your Password"
-                register={register("password")}
-                type="password"
-                error={errors.password}
-            />
-            <Input
-                className="py-3 w-full"
-                label="Confirm password"
-                placeholder="Please confirm your Password"
-                register={register("confirmPassword")}
-                type="password"
-                error={errors.confirmPassword}
-            />
             <Link className="mt-2 inline-block text-sm text-gray-500" to="/">
                 You already have an account?{" "}
                 <span className="text-blue-500">Login now</span>
@@ -87,17 +68,6 @@ const schema = yup.object().shape({
         .trim()
         .required("Email is required!")
         .email("Please input a correct email format!"),
-    password: yup
-        .string()
-        .trim()
-        .required("Password is required!")
-        .min(8, "Password must be minimum of 8 characters length")
-        .password(
-            "Password can only contains alphabet, uppercase, number and these special characters: !@#$%^&*_-"
-        ),
-    confirmPassword: yup
-        .string()
-        .oneOf([yup.ref("password"), null], "Passwords must match"),
 });
 
 export default SignupForm;

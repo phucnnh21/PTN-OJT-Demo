@@ -5,7 +5,6 @@ using IMP.AppServices;
 using IMP.EFCore;
 using IMP.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -34,8 +33,8 @@ builder.Services.AddAuthorization();
 builder.Services.AddCors();
 
 // Hangfire
-/*builder.Services.AddHangfire(config => config.UsePostgreSqlStorage(builder.Configuration.GetConnectionString("Hangfire")));
-builder.Services.AddHangfireServer();*/
+builder.Services.AddHangfire(config => config.UsePostgreSqlStorage(builder.Configuration.GetConnectionString("Hangfire")));
+builder.Services.AddHangfireServer();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -62,7 +61,7 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
-/*app.UseHangfireDashboard(
+app.UseHangfireDashboard(
     "/hangfire",
     new DashboardOptions
     {
@@ -72,7 +71,7 @@ app.UseAuthorization();
                     Pass = builder.Configuration.GetValue<string>("HangfireSettings:Password")
                 }
             }
-    });*/
+    });
 
 app.MapControllers();
 

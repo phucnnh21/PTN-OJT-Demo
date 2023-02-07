@@ -12,6 +12,7 @@ import Profile from "./pages/manage/Profile";
 import PasswordUpdate from "./pages/manage/PasswordUpdate";
 import ViewUsers from "./pages/manage/users/View";
 import AdminRouteLayout from "./components/Routes/AdminRouteLayout";
+import PasswordCreate from "./pages/PasswordCreate";
 
 function App() {
     return (
@@ -21,6 +22,10 @@ function App() {
                     <Route element={<AuthRouteLayout />}>
                         <Route path="/signup" element={<Signup />} />
                         <Route path="/" element={<Login />} />
+                        <Route
+                            path="/password-create"
+                            element={<PasswordCreate />}
+                        />
                     </Route>
 
                     <Route path="/manage" element={<ProtectedRouteLayout />}>

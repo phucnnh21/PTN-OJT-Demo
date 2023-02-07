@@ -52,6 +52,12 @@ namespace IMP.EFCore
         [Required]
         [EmailAddress]
         public string Email { get; set; } = null!;
+    }
+
+    public class UserPasswordCreateDto
+    {
+        [Required]
+        public string Token { get; set; } = null!;
 
         [Required]
         [StringLength(50, MinimumLength = 8)]
