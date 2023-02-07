@@ -35,7 +35,7 @@ namespace IMP.AppServices
             return tokenHandler.WriteToken(token);
         }
 
-        public ClaimsPrincipal GetPrincipalFromExpiredToken(string token, bool validateLifetime = false)
+        public ClaimsPrincipal GetPrincipalFromToken(string token, bool validateLifetime = false)
         {
             var tokenValidationParameters = new TokenValidationParameters
             {

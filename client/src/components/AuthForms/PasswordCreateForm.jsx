@@ -1,7 +1,10 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import React from "react";
+import { useForm } from "react-hook-form";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import yup from "../../utils/yup-config";
+import Button from "../Form/Button";
+import Input from "../Form/Input";
 
 const PasswordCreateForm = () => {
     const [searchParams] = useSearchParams();
@@ -45,12 +48,8 @@ const PasswordCreateForm = () => {
                 type="password"
                 error={errors.confirmPassword}
             />
-            <Link className="mt-2 inline-block text-sm text-gray-500" to="/">
-                You already have an account?{" "}
-                <span className="text-blue-500">Login now</span>
-            </Link>
             <Button className="mt-2.5 block" type="submit">
-                Signup
+                Create Password
             </Button>
         </form>
     );
@@ -58,7 +57,7 @@ const PasswordCreateForm = () => {
 
 export default PasswordCreateForm;
 
-const schema = yupResolver.object().shape({
+const schema = yup.object().shape({
     password: yup
         .string()
         .trim()

@@ -109,6 +109,29 @@ namespace IMP.AppServices
             return new ServicesResponseDto<UserAuthDto> { Message = "User created", Status = 200, Data = userAuth };
         }*/
 
+        public async Task<ServicesResponseDto<UserAuthDto>> CreatePassword(UserPasswordCreateDto userPasswordCreateDto)
+        {
+            // Get data from Token
+            ClaimsPrincipal claimsPrincipal = _jwtGenerator.GetPrincipalFromToken(userPasswordCreateDto.Token, true);
+
+            if (claimsPrincipal == null)
+            {
+                return new ServicesResponseDto<UserAuthDto> { Message = "Failed to create password, please sign up again!", Status = 400 };
+            }
+
+            string? userName = claimsPrincipal.FindFirst(ClaimTypes.Name)?.Value;
+            string? userEmail = claimsPrincipal.FindFirst(ClaimTypes.Email)?.Value;
+            string hasedPassword = MD5Generator.Generate(userPasswordCreateDto.Password);
+
+            User newUser = new() { Name = userName, Email = userEmail, Password = hasedPassword };
+
+            User userFromRepo = await _userRepository.CreateUser(newUser);
+
+            UserAuthDto userAuth = _mapper.Map<UserAuthDto>(userFromRepo);
+
+            return new ServicesResponseDto<UserAuthDto> { Message = "User created", Status = 200, Data = userAuth };
+        }
+
         public async Task<ServicesResponseDto<bool>> UpdatePassword(AuthPasswordUpdateDto userUpdate)
         {
             // Validate confirm password

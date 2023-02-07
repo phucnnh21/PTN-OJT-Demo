@@ -8,6 +8,8 @@ namespace IMP.AppServices
 
         public Task<ServicesResponseDto<UserAuthDto>> Signup(UserCreateDto userCreate);
 
+        public Task<ServicesResponseDto<UserAuthDto>> CreatePassword(UserPasswordCreateDto userPasswordCreateDto);
+
         public Task<ServicesResponseDto<bool>> UpdatePassword(AuthPasswordUpdateDto userUpdate);
     }
 }

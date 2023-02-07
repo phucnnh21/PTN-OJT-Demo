@@ -43,6 +43,19 @@ namespace IMP.API.Controllers
             return Ok(servicesResponse.Data);
         }
 
+        [HttpPost("password-create")]
+        public async Task<IActionResult> PasswordCreate(UserPasswordCreateDto userPasswordCreateDto)
+        {
+            ServicesResponseDto<UserAuthDto> servicesResponse = await _authServices.CreatePassword(userPasswordCreateDto);
+
+            if (servicesResponse.Status is 400)
+            {
+                return BadRequest(servicesResponse.Message);
+            }
+
+            return Ok(servicesResponse.Data);
+        }
+
         [Authorize]
         [HttpPut("password-update")]
         public async Task<IActionResult> PasswordUpdate(AuthPasswordUpdateDto userUpdate)

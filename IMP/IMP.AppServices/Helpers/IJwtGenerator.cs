@@ -10,6 +10,6 @@ namespace IMP.AppServices.Helpers
     public interface IJwtGenerator
     {
         public string GenerateToken(IEnumerable<Claim> claims, uint minutes);
-        public ClaimsPrincipal GetPrincipalFromExpiredToken(string token, bool validateLifetime = false);
+        public ClaimsPrincipal GetPrincipalFromToken(string token, bool validateLifetime = false);
     }
 }
