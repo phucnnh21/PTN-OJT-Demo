@@ -2,6 +2,7 @@
 using IMP.EFCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using System.Net;
 
 namespace IMP.API.Controllers
@@ -11,10 +12,12 @@ namespace IMP.API.Controllers
     public class AuthController : Controller
     {
         private readonly IAuthAppServices _authServices;
+        private readonly IHubContext<NotificationHub> _hubContext;
 
-        public AuthController(IAuthAppServices authServices)
+        public AuthController(IAuthAppServices authServices, IHubContext<NotificationHub> hubContext)
         {
             _authServices = authServices;
+            _hubContext = hubContext;
         }
 
         [HttpPost("login")]
@@ -40,6 +43,7 @@ namespace IMP.API.Controllers
                 return Conflict(servicesResponse.Message);
             }
 
+            await _hubContext.Clients.Group(UserRole.ADMIN).SendAsync("Notification", $"User {userCreate.Email} has signed up!", DateTime.Now);
             return Ok(servicesResponse.Data);
         }
 
@@ -51,6 +55,11 @@ namespace IMP.API.Controllers
             if (servicesResponse.Status is 400)
             {
                 return BadRequest(servicesResponse.Message);
+            }
+
+            if (servicesResponse.Status is 409)
+            {
+                return Conflict(servicesResponse.Message);
             }
 
             return Ok(servicesResponse.Data);

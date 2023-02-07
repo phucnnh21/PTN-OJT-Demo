@@ -35,7 +35,7 @@ const View = () => {
     let tableHeaders = ["Id", "Name", "Role", "Last Modified", "Actions"];
 
     return (
-        <div className="w-full h-full flex flex-col items-center justify-between p-16">
+        <div className="w-full h-full flex flex-col items-center p-16">
             <SearchBar />
 
             <div>

@@ -3,6 +3,7 @@ using Hangfire;
 using IMP.AppServices.Helpers;
 using IMP.EFCore;
 using IMP.Infrastructure;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using System.Security.Claims;
 
@@ -112,7 +113,7 @@ namespace IMP.AppServices
         public async Task<ServicesResponseDto<UserAuthDto>> CreatePassword(UserPasswordCreateDto userPasswordCreateDto)
         {
             // Get data from Token
-            ClaimsPrincipal claimsPrincipal = _jwtGenerator.GetPrincipalFromToken(userPasswordCreateDto.Token, true);
+            ClaimsPrincipal? claimsPrincipal = _jwtGenerator.GetPrincipalFromToken(userPasswordCreateDto.Token, true);
 
             if (claimsPrincipal == null)
             {
@@ -121,6 +122,15 @@ namespace IMP.AppServices
 
             string? userName = claimsPrincipal.FindFirst(ClaimTypes.Name)?.Value;
             string? userEmail = claimsPrincipal.FindFirst(ClaimTypes.Email)?.Value;
+
+            // Check if email exist
+            bool userExist = (await _userRepository.GetByCondition(u => u.Email == userEmail)) is not null;
+
+            if (userExist)
+            {
+                return new ServicesResponseDto<UserAuthDto> { Message = "Email duplicated", Status = 409 };
+            }
+
             string hasedPassword = MD5Generator.Generate(userPasswordCreateDto.Password);
 
             User newUser = new() { Name = userName, Email = userEmail, Password = hasedPassword };
@@ -134,12 +144,6 @@ namespace IMP.AppServices
 
         public async Task<ServicesResponseDto<bool>> UpdatePassword(AuthPasswordUpdateDto userUpdate)
         {
-            // Validate confirm password
-            if (userUpdate.NewPassword != userUpdate.ConfirmPassword)
-            {
-                return new ServicesResponseDto<bool> { Message = "Password confirm does not match", Status = 400 };
-            }
-
             string oldPasswordHashed = MD5Generator.Generate(userUpdate.OldPassword); // Hash old password
 
             var expression = Utils.ConcatLambdaExpression<User>(u => u.Id == userUpdate.Id, u => u.Password == oldPasswordHashed);

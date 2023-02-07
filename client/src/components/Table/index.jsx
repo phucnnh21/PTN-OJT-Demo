@@ -4,7 +4,7 @@ import "./Table.css";
 
 const Table = ({ headers, data }) => {
     return (
-        <table className="table-fixed border-collapse border border-slate-500 w-full">
+        <table className="table-fixed border-collapse border border-slate-500 w-full my-8">
             <thead className="bg-gray-800 text-white">
                 <tr>
                     {headers.map((header) => (

@@ -27,8 +27,6 @@ namespace IMP.EFCore
 
         public string OldPassword { get; set; } = null!;
 
-        [StringLength(50, MinimumLength = 8)]
-        [RegularExpression(AppConstants.Password.Regex, ErrorMessage = AppConstants.Password.ErrorMessage)]
         public string NewPassword { get; set; } = null!;
 
         public string ConfirmPassword { get; set; } = null!;

@@ -13,8 +13,11 @@ import PasswordUpdate from "./pages/manage/PasswordUpdate";
 import ViewUsers from "./pages/manage/users/View";
 import AdminRouteLayout from "./components/Routes/AdminRouteLayout";
 import PasswordCreate from "./pages/PasswordCreate";
+import { useHubConnection } from "./utils/hooks/useHubConnection";
 
 function App() {
+    useHubConnection();
+
     return (
         <>
             <BrowserRouter>
@@ -34,11 +37,16 @@ function App() {
                             element={<PasswordUpdate />}
                         />
 
-                        <Route path="" element={<Profile />} />
+                        <Route path="profile" element={<Profile />} />
 
                         <Route element={<AdminRouteLayout />}>
                             <Route path="users" element={<ViewUsers />} />
                         </Route>
+
+                        <Route
+                            path=""
+                            element={<Navigate to="/manage/profile" />}
+                        />
                     </Route>
 
                     <Route path="*" element={<Navigate to="/" />} />

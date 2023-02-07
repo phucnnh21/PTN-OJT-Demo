@@ -1,7 +1,9 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import { createPasswordApi } from "../../api/auth-api";
 import yup from "../../utils/yup-config";
 import Button from "../Form/Button";
 import Input from "../Form/Input";
@@ -24,7 +26,17 @@ const PasswordCreateForm = () => {
 
     // HandleSubmit
     const handleSubmitForm = (data) => {
-        console.log(data);
+        createPasswordApi({
+            ...data,
+            token,
+        })
+            .then(() => {
+                toast.success("Account created. You can login now!");
+                navigate("/login");
+            })
+            .catch(() => {
+                toast.error("Failed to create account, please signup again!");
+            });
     };
 
     return (
@@ -48,6 +60,12 @@ const PasswordCreateForm = () => {
                 type="password"
                 error={errors.confirmPassword}
             />
+            <Link
+                className="mt-2 inline-block text-sm text-gray-500"
+                to="/signup"
+            >
+                <span className="text-blue-500">Back to sign up</span>
+            </Link>
             <Button className="mt-2.5 block" type="submit">
                 Create Password
             </Button>

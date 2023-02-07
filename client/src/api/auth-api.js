@@ -19,3 +19,9 @@ export const changePasswordApi = async (data) => {
 
     return res;
 };
+
+export const createPasswordApi = async (data) => {
+    const res = await axios.post(apiRoute + "/password-create", data);
+
+    return res;
+};

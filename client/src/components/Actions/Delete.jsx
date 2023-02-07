@@ -13,7 +13,7 @@ const Delete = ({ data }) => {
         Swal.fire({
             title: `Do you want to DELETE the user named "${data.name}"`,
             showDenyButton: true,
-            confirmButtonText: "Don't delete",
+            confirmButtonText: "Cancel",
             denyButtonText: `Delete`,
         }).then((result) => {
             /* Read more about isConfirmed, isDenied below */

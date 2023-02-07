@@ -45,23 +45,15 @@ namespace IMP.EFCore
 
     public class UserCreateDto
     {
-        [Required]
-        [StringLength(40)]
         public string Name { get; set; } = null!;
 
-        [Required]
-        [EmailAddress]
         public string Email { get; set; } = null!;
     }
 
     public class UserPasswordCreateDto
     {
-        [Required]
         public string Token { get; set; } = null!;
 
-        [Required]
-        [StringLength(50, MinimumLength = 8)]
-        [RegularExpression(AppConstants.Password.Regex, ErrorMessage = AppConstants.Password.ErrorMessage)]
         public string Password { get; set; } = null!;
     }
 

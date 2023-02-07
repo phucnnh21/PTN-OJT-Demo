@@ -1,7 +1,11 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Hangfire;
 using Hangfire.PostgreSql;
 using HangfireBasicAuthenticationFilter;
+using IMP.API;
 using IMP.AppServices;
+using IMP.AppServices.Validators;
 using IMP.EFCore;
 using IMP.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -36,7 +40,14 @@ builder.Services.AddCors();
 builder.Services.AddHangfire(config => config.UsePostgreSqlStorage(builder.Configuration.GetConnectionString("Hangfire")));
 builder.Services.AddHangfireServer();
 
+builder.Services.AddSignalR();
+
 builder.Services.AddControllers();
+
+builder.Services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
+
+builder.Services.AddValidatorsFromAssemblyContaining<AuthPasswordUpdateDtoValidator>();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -74,6 +85,9 @@ app.UseHangfireDashboard(
     });
 
 app.MapControllers();
+
+// SignalR endpoints
+app.MapHub<NotificationHub>("/notification");
 
 app.Run();
 
