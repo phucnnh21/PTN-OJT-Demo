@@ -2,8 +2,6 @@
 using IMP.EFCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
-using System.Net;
 
 namespace IMP.API.Controllers
 {
@@ -12,12 +10,14 @@ namespace IMP.API.Controllers
     public class AuthController : Controller
     {
         private readonly IAuthAppServices _authServices;
-        private readonly IHubContext<NotificationHub> _hubContext;
+        private readonly IConfiguration _configuration;
+        private readonly string _hubServerUri = "";
 
-        public AuthController(IAuthAppServices authServices, IHubContext<NotificationHub> hubContext)
+        public AuthController(IAuthAppServices authServices, IConfiguration configuration)
         {
             _authServices = authServices;
-            _hubContext = hubContext;
+            _configuration = configuration;
+            _hubServerUri = _configuration.GetValue<string>("Servers:Hubs");
         }
 
         [HttpPost("login")]
@@ -43,7 +43,7 @@ namespace IMP.API.Controllers
                 return Conflict(servicesResponse.Message);
             }
 
-            await _hubContext.Clients.Group(UserRole.ADMIN).SendAsync("Notification", $"User {userCreate.Email} has signed up!", DateTime.Now);
+            await HttpClientHelpers.PostAsync<UserCreateDto>($"{_hubServerUri}/api/notification/notify-admin", userCreate);
             return Ok(servicesResponse.Data);
         }
 

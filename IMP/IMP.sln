@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IMP.AppServices", "IMP.AppS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IMP.Infrastructure", "IMP.Infrastructure\IMP.Infrastructure.csproj", "{2BEE5A35-04AA-4D58-BA76-F70035F5C445}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IMP.API", "IMP.API\IMP.API.csproj", "{43E05B9E-CD87-453D-A9FE-0613F468B56C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IMP.API", "IMP.API\IMP.API.csproj", "{43E05B9E-CD87-453D-A9FE-0613F468B56C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IMP.Hubs", "IMP.Hubs\IMP.Hubs.csproj", "{5553D403-2118-48A5-8D6D-774D7345665A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{43E05B9E-CD87-453D-A9FE-0613F468B56C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{43E05B9E-CD87-453D-A9FE-0613F468B56C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{43E05B9E-CD87-453D-A9FE-0613F468B56C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5553D403-2118-48A5-8D6D-774D7345665A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5553D403-2118-48A5-8D6D-774D7345665A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5553D403-2118-48A5-8D6D-774D7345665A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5553D403-2118-48A5-8D6D-774D7345665A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

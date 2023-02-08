@@ -1,9 +1,8 @@
 ﻿using IMP.EFCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
-using System.Security.Claims;
 
-namespace IMP.API
+namespace IMP.Hubs
 {
     public class NotificationHub : Hub
     {

@@ -72,7 +72,7 @@ namespace IMP.AppServices
                 new Claim(ClaimTypes.Name, userCreate.Name),
             };
 
-            string frontendBasePath = _configuration.GetValue<string>("FrontendConfig:BasePath");
+            string frontendBasePath = _configuration.GetValue<string>("Servers:Frontend");
             string token = _jwtGenerator.GenerateToken(claims, 2 * 24 * 60); // 2 days
 
             _backgroundJobClient.Enqueue(() => _mailService.SendMail(
