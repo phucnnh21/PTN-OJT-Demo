@@ -2,6 +2,8 @@
 using IMP.EFCore;
 using IMP.Helpers;
 using IMP.Infrastructure;
+using LinqKit;
+using System.Linq.Expressions;
 
 namespace IMP.AppServices
 {
@@ -25,18 +27,21 @@ namespace IMP.AppServices
         public async Task<PaginationResponseDto<UserReadDto>> FilterUser(UserPaginationRequestDto userPagination)
         {
             UserPaginationDbDto userPaginationDbDto = _mapper.Map<UserPaginationDbDto>(userPagination);
+            ExpressionStarter<User> predicate = PredicateBuilder.New<User>(true);
 
             // Filter by role
             if (!String.IsNullOrWhiteSpace(userPagination.Role))
             {
-                userPaginationDbDto.Expression = Utils.ConcatLambdaExpression<User>(userPaginationDbDto.Expression, u => u.Role.ToLower() == userPagination.Role.ToLower());
+                predicate.And(u => u.Role.ToLower() == userPagination.Role.ToLower());
             }
 
             // Search
             if (!String.IsNullOrWhiteSpace(userPagination.Keyword))
             {
-                userPaginationDbDto.Expression = Utils.ConcatLambdaExpression<User>(userPaginationDbDto.Expression, u => u.Name.ToLower().Contains(userPagination.Keyword.ToLower()));
+                predicate.And(u => u.Name.ToLower().Contains(userPagination.Keyword.ToLower()));
             }
+
+            userPaginationDbDto.Expression = predicate;
 
             PaginationResponseDto<User> userList = await _unitOfWork.UserRepository.FilterUsers(userPaginationDbDto);
 
