@@ -8,6 +8,8 @@ namespace IMP.Infrastructure
         {
             services.AddScoped<IUserRepository, UserRepository>();
 
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
+
             return services;
         }
     }

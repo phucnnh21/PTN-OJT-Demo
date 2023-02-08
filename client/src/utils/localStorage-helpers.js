@@ -15,3 +15,9 @@ export const setUserTokenAndData = (payload) => {
     localStorage.setItem("accessToken", payload.token);
     localStorage.setItem("user", JSON.stringify(payload.user));
 };
+
+export const getAccessToken = () => {
+    var accessToken = localStorage.getItem("accessToken");
+
+    return accessToken;
+};

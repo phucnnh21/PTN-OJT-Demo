@@ -2,6 +2,7 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import Swal from "sweetalert2";
 import { logout } from "../../stores/slices/authSlice";
+import { stopConnection } from "../../stores/slices/signalRConnectionSlice";
 
 const LogoutButton = () => {
     const dispatch = useDispatch();

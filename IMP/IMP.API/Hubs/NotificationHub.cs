@@ -1,4 +1,5 @@
 ﻿using IMP.EFCore;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using System.Security.Claims;
 
@@ -6,6 +7,7 @@ namespace IMP.API
 {
     public class NotificationHub : Hub
     {
+        [Authorize(Roles = UserRole.ADMIN)]
         public override async Task OnConnectedAsync()
         {
             try

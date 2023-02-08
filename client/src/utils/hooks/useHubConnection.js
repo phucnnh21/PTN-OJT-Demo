@@ -1,6 +1,9 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { startConnection } from "../../stores/slices/signalRConnectionSlice";
+import {
+    startConnection,
+    stopConnection,
+} from "../../stores/slices/signalRConnectionSlice";
 import { Role } from "../constants";
 
 export const useHubConnection = () => {
@@ -10,6 +13,10 @@ export const useHubConnection = () => {
     useEffect(() => {
         if (auth && auth.role === Role.ADMIN) {
             dispatch(startConnection());
+        }
+
+        if (!auth) {
+            dispatch(stopConnection());
         }
     }, [auth]);
 };

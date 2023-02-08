@@ -6,11 +6,11 @@ namespace IMP.AppServices
 {
     public class UserAppServices : IUserAppServices
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public UserAppServices(IUserRepository userRepository, IMapper mapper) {
-            _userRepository = userRepository;
+        public UserAppServices(IUnitOfWork unitOfWork, IMapper mapper) {
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
@@ -37,7 +37,7 @@ namespace IMP.AppServices
                 userPaginationDbDto.Expression = Utils.ConcatLambdaExpression<User>(userPaginationDbDto.Expression, u => u.Name.ToLower().Contains(userPagination.Keyword.ToLower()));
             }
 
-            PaginationResponseDto<User> userList = await _userRepository.FilterUsers(userPaginationDbDto);
+            PaginationResponseDto<User> userList = await _unitOfWork.UserRepository.FilterUsers(userPaginationDbDto);
 
             PaginationResponseDto<UserReadDto> userListResult = _mapper.Map<PaginationResponseDto<UserReadDto>>(userList);
 
@@ -54,7 +54,8 @@ namespace IMP.AppServices
                 return NotFoundUserAppServicesResponse();
             }
 
-            await _userRepository.DeleteUser(user);
+            await _unitOfWork.UserRepository.DeleteUser(user);
+            _unitOfWork.SaveChanges();
 
             UserReadDto userResponse = _mapper.Map<UserReadDto>(user);
 
@@ -73,7 +74,8 @@ namespace IMP.AppServices
 
             User user = _mapper.Map(userUpdate, userFromRepo);
 
-            await _userRepository.UpdateUser(user);
+            await _unitOfWork.UserRepository.UpdateUser(user);
+            _unitOfWork.SaveChanges();
 
             UserReadDto userResponse = _mapper.Map<UserReadDto>(user);
 
@@ -82,7 +84,7 @@ namespace IMP.AppServices
 
         private async Task<User?> GetById(int userId)
         {
-            return await _userRepository.GetById(userId);
+            return await _unitOfWork.UserRepository.GetById(userId);
         }
 
         private ServicesResponseDto<UserReadDto> NotFoundUserAppServicesResponse()

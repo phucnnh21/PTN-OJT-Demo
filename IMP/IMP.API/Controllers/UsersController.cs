@@ -3,6 +3,7 @@ using IMP.EFCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
+using System.Security.Claims;
 
 namespace IMP.API.Controllers
 {

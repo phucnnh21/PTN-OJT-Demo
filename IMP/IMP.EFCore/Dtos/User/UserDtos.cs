@@ -64,6 +64,8 @@ namespace IMP.EFCore
         public string Name { get; set; } = null!;
 
         public string? Address { get; set; }
+
+        public DateTime LastUpdatedAt { get; set; } = DateTime.Now;
     }
 
     public class UserPaginationRequestDto : PaginationRequestDto

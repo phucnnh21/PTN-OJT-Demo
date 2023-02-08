@@ -3,7 +3,6 @@ using Hangfire;
 using IMP.AppServices.Helpers;
 using IMP.EFCore;
 using IMP.Infrastructure;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using System.Security.Claims;
 
@@ -11,16 +10,16 @@ namespace IMP.AppServices
 {
     public class AuthAppServices : IAuthAppServices
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IJwtGenerator _jwtGenerator;
         private readonly IMailService _mailService;
         private readonly IConfiguration _configuration;
         private readonly IBackgroundJobClient _backgroundJobClient;
 
-        public AuthAppServices(IUserRepository userRepository, IMapper mapper, IJwtGenerator jwtGenerator, IMailService mailService, IConfiguration configuration, IBackgroundJobClient backgroundJobClient)
+        public AuthAppServices(IUnitOfWork unitOfWork, IMapper mapper, IJwtGenerator jwtGenerator, IMailService mailService, IConfiguration configuration, IBackgroundJobClient backgroundJobClient)
         {
-            _userRepository = userRepository;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
             _jwtGenerator = jwtGenerator;
             _mailService = mailService;
@@ -33,7 +32,7 @@ namespace IMP.AppServices
             string hashedPassword = MD5Generator.Generate(authRequest.Password);
 
             // Try to get user
-            User? userFromRepo = await _userRepository.GetUserAuth(authRequest.Email, hashedPassword);
+            User? userFromRepo = await _unitOfWork.UserRepository.GetUserAuth(authRequest.Email, hashedPassword);
 
             if (userFromRepo is null)
             {
@@ -60,7 +59,7 @@ namespace IMP.AppServices
         public async Task<ServicesResponseDto<UserAuthDto>> Signup(UserCreateDto userCreate)
         {
             // Check if email exist
-            bool userExist = (await _userRepository.GetByCondition(u => u.Email == userCreate.Email)) is not null;
+            bool userExist = (await _unitOfWork.UserRepository.GetByCondition(u => u.Email == userCreate.Email)) is not null;
 
             if (userExist)
             {
@@ -124,7 +123,7 @@ namespace IMP.AppServices
             string? userEmail = claimsPrincipal.FindFirst(ClaimTypes.Email)?.Value;
 
             // Check if email exist
-            bool userExist = (await _userRepository.GetByCondition(u => u.Email == userEmail)) is not null;
+            bool userExist = (await _unitOfWork.UserRepository.GetByCondition(u => u.Email == userEmail)) is not null;
 
             if (userExist)
             {
@@ -135,7 +134,8 @@ namespace IMP.AppServices
 
             User newUser = new() { Name = userName, Email = userEmail, Password = hasedPassword };
 
-            User userFromRepo = await _userRepository.CreateUser(newUser);
+            User userFromRepo = await _unitOfWork.UserRepository.CreateUser(newUser);
+            _unitOfWork.SaveChanges();
 
             UserAuthDto userAuth = _mapper.Map<UserAuthDto>(userFromRepo);
 
@@ -148,7 +148,7 @@ namespace IMP.AppServices
 
             var expression = Utils.ConcatLambdaExpression<User>(u => u.Id == userUpdate.Id, u => u.Password == oldPasswordHashed);
 
-            User? userFromRepo = await _userRepository.GetByCondition(expression);
+            User? userFromRepo = await _unitOfWork.UserRepository.GetByCondition(expression);
         
             // Validate old password
             if (userFromRepo == null)
@@ -158,7 +158,8 @@ namespace IMP.AppServices
 
             userFromRepo.Password = MD5Generator.Generate(userUpdate.NewPassword); // Hash password
 
-            await _userRepository.UpdateUser(userFromRepo);
+            await _unitOfWork.UserRepository.UpdateUser(userFromRepo);
+            _unitOfWork.SaveChanges();
 
             return new ServicesResponseDto<bool> { Message = "Success", Status = 200 };
         }
