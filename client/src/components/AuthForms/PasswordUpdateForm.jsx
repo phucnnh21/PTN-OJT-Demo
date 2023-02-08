@@ -35,7 +35,21 @@ const PasswordUpdateForm = () => {
                 }
             })
             .catch((err) => {
-                toast.error(err.response.data);
+                if (err.response.data.errors) {
+                    if (typeof err.response.data.errors === "object") {
+                        Object.values(err.response.data.errors).forEach(
+                            (value) => {
+                                if (Array.isArray(value)) {
+                                    toast.error(value.join(". "));
+                                } else {
+                                    toast.error(value);
+                                }
+                            }
+                        );
+                    }
+                } else {
+                    toast.error(err.response.data);
+                }
             });
     };
 
