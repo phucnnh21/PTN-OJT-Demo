@@ -21,7 +21,7 @@ export const filterApi = async (filter) => {
 
     const res = await axios.post(path, {
         ...filter,
-        searchColumns: ["name", "email"],
+        searchColumns: ["name", "role"],
     });
 
     return res.data;
