@@ -1,9 +1,5 @@
 using FluentValidation;
 using FluentValidation.AspNetCore;
-using Hangfire;
-using Hangfire.PostgreSql;
-using HangfireBasicAuthenticationFilter;
-using IMP.API;
 using IMP.AppServices;
 using IMP.AppServices.Validators;
 using IMP.EFCore;
@@ -54,10 +50,6 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddCors();
 
-// Hangfire
-builder.Services.AddHangfire(config => config.UsePostgreSqlStorage(builder.Configuration.GetConnectionString("Hangfire")));
-builder.Services.AddHangfireServer();
-
 builder.Services.AddControllers();
 
 builder.Services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
@@ -87,18 +79,6 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 
 app.UseAuthorization();
-
-app.UseHangfireDashboard(
-    "/hangfire",
-    new DashboardOptions
-    {
-        Authorization = new[]  {
-                new HangfireCustomBasicAuthenticationFilter {
-                    User = builder.Configuration.GetValue<string>("HangfireSettings:UserName"),
-                    Pass = builder.Configuration.GetValue<string>("HangfireSettings:Password")
-                }
-            }
-    });
 
 app.MapControllers();
 

@@ -1,25 +1,22 @@
-﻿using AutoMapper.Internal;
-using Hangfire;
+﻿using Hangfire;
 using IMP.EFCore;
 using MailKit.Security;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using MimeKit;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Security.Claims;
 
-namespace IMP.AppServices.Helpers
+namespace IMP.BackgroundServices
 {
     public class MailService : IMailService
     {
         private readonly MailSettings _mailSettings;
+        private readonly IBackgroundJobClient _backgroundJobClient;
 
-        public MailService(IOptions<MailSettings> mailSettings)
+        public MailService(IOptions<MailSettings> mailSettings, IBackgroundJobClient backgroundJobClient)
         {
             _mailSettings = mailSettings.Value;
+            _backgroundJobClient = backgroundJobClient;
         }
 
         [AutomaticRetry(Attempts = 10)]
@@ -50,6 +47,11 @@ namespace IMP.AppServices.Helpers
 
             await smtp.SendAsync(email);
             smtp.Disconnect(true);
+        }
+
+        public void SendMailBackground(MailContent mailContent)
+        {
+            _backgroundJobClient.Enqueue(() => SendMail(mailContent));
         }
     }
 }

@@ -10,14 +10,10 @@ namespace IMP.API.Controllers
     public class AuthController : Controller
     {
         private readonly IAuthAppServices _authServices;
-        private readonly IConfiguration _configuration;
-        private readonly string _hubServerUri = "";
 
         public AuthController(IAuthAppServices authServices, IConfiguration configuration)
         {
-            _authServices = authServices;
-            _configuration = configuration;
-            _hubServerUri = _configuration.GetValue<string>("Servers:Hubs");
+            _authServices = authServices;          
         }
 
         [HttpPost("login")]
@@ -43,7 +39,6 @@ namespace IMP.API.Controllers
                 return Conflict(servicesResponse.Message);
             }
 
-            await HttpClientHelpers.PostAsync<UserCreateDto>($"{_hubServerUri}/api/notification/notify-admin", userCreate);
             return Ok(servicesResponse.Data);
         }
 

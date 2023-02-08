@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace IMP.AppServices
+namespace IMP.Helpers
 {
     public static class MD5Generator
     {

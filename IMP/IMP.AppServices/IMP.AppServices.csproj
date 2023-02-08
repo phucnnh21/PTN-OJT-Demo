@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\IMP.EFCore\IMP.EFCore.csproj" />
+    <ProjectReference Include="..\IMP.Helpers\IMP.Helpers.csproj" />
     <ProjectReference Include="..\IMP.Infrastructure\IMP.Infrastructure.csproj" />
   </ItemGroup>
 

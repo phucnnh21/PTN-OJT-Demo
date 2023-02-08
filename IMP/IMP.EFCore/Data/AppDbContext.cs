@@ -15,7 +15,7 @@ namespace IMP.EFCore
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                .AddJsonFile("appsettings.Development.json", optional: true, reloadOnChange: true);
 
             IConfigurationRoot configuration = builder.Build();
             optionsBuilder.UseNpgsql(configuration.GetConnectionString("AppDB"));

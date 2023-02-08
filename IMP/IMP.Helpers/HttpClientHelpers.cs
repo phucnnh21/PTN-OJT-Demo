@@ -1,6 +1,6 @@
 ﻿using System.Net.Http.Json;
 
-namespace IMP.AppServices
+namespace IMP.Helpers
 {
     public static class HttpClientHelpers
     {

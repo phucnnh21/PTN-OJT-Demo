@@ -2,10 +2,8 @@
 using System.Text;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.Extensions.Configuration;
-using IMP.AppServices.Helpers;
 
-namespace IMP.AppServices
+namespace IMP.Helpers
 {
     public class JwtGenerator : IJwtGenerator
     {

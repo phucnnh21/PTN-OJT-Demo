@@ -1,5 +1,5 @@
-﻿using IMP.AppServices.Helpers;
-using IMP.EFCore;
+﻿using IMP.EFCore;
+using IMP.Helpers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
@@ -16,9 +16,6 @@ namespace IMP.AppServices
             services.AddScoped<IAuthAppServices, AuthAppServices>();
 
             services.AddSingleton<IJwtGenerator>(new JwtGenerator(configuration["Jwt:Key"]));
-
-            services.AddTransient<IMailService, MailService>();
-            services.Configure<MailSettings>(configuration.GetSection("MailSettings"));
 
             return services;
         }

@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
-using Hangfire;
-using IMP.AppServices.Helpers;
 using IMP.EFCore;
+using IMP.Helpers;
 using IMP.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using System.Security.Claims;
@@ -13,18 +12,18 @@ namespace IMP.AppServices
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IJwtGenerator _jwtGenerator;
-        private readonly IMailService _mailService;
         private readonly IConfiguration _configuration;
-        private readonly IBackgroundJobClient _backgroundJobClient;
+        private readonly string _hubServerUri;
+        private readonly string _backgroundJobsServerUri;
 
-        public AuthAppServices(IUnitOfWork unitOfWork, IMapper mapper, IJwtGenerator jwtGenerator, IMailService mailService, IConfiguration configuration, IBackgroundJobClient backgroundJobClient)
+        public AuthAppServices(IUnitOfWork unitOfWork, IMapper mapper, IJwtGenerator jwtGenerator, IConfiguration configuration)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _jwtGenerator = jwtGenerator;
-            _mailService = mailService;
             _configuration = configuration;
-            _backgroundJobClient = backgroundJobClient;
+            _hubServerUri = _configuration.GetValue<string>("Servers:Hubs");
+            _backgroundJobsServerUri = _configuration.GetValue<string>("Servers:BackgroundJobs");
         }
 
         public async Task<AuthReponseDto?> Login(AuthRequestDto authRequest)
@@ -72,16 +71,19 @@ namespace IMP.AppServices
                 new Claim(ClaimTypes.Name, userCreate.Name),
             };
 
+            // Send token to user through email
             string frontendBasePath = _configuration.GetValue<string>("Servers:Frontend");
             string token = _jwtGenerator.GenerateToken(claims, 2 * 24 * 60); // 2 days
 
-            _backgroundJobClient.Enqueue(() => _mailService.SendMail(
-                new MailContent
-                {
-                    Subject = "[Demo] Email Verification",
-                    Body = $"<a href='{frontendBasePath}/password-create?token={token}'>Create password</a>",
-                    To = userCreate.Email
-                }));
+            MailContent mailContent = new MailContent
+            {
+                Subject = "[Demo] Email Verification",
+                Body = $"<a href='{frontendBasePath}/password-create?token={token}'>Create password</a>",
+                To = userCreate.Email
+            };
+
+            await HttpClientHelpers.PostAsync<MailContent>($"{_backgroundJobsServerUri}/api/mail/send-mail", mailContent);
+            await HttpClientHelpers.PostAsync<UserCreateDto>($"{_hubServerUri}/api/notification/notify-admin", userCreate);
 
             return new ServicesResponseDto<UserAuthDto> { Message = "Email sent", Status = 200 };
         }
