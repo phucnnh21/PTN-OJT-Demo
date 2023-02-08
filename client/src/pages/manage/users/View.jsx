@@ -17,7 +17,7 @@ const View = () => {
     const userFilter = useSelector((state) => state.userFilter);
     const dispatch = useDispatch();
 
-    const { total, page, size } = userFilter;
+    const { total, page, size, orderBy } = userFilter;
 
     const setCurrentPage = (page) => {
         dispatch(setFilter({ page }));
@@ -32,7 +32,27 @@ const View = () => {
         });
     }, [userFilter]);
 
-    let tableHeaders = ["Id", "Name", "Role", "Last Modified", "Actions"];
+    const handleOrderBy = (header) => {
+        if (orderBy.fieldName != header.value) {
+            dispatch(
+                setFilter({
+                    orderBy: {
+                        fieldName: header.value,
+                        isAscending: true,
+                    },
+                })
+            );
+        } else {
+            dispatch(
+                setFilter({
+                    orderBy: {
+                        fieldName: header.value,
+                        isAscending: !orderBy.isAscending,
+                    },
+                })
+            );
+        }
+    };
 
     return (
         <div className="w-full h-full flex flex-col items-center p-16">
@@ -40,7 +60,7 @@ const View = () => {
 
             <div>
                 <Table
-                    headers={tableHeaders}
+                    headers={userTableHeaders}
                     data={tableData.map((u) => ({
                         id: u.id,
                         name: u.name,
@@ -53,6 +73,8 @@ const View = () => {
                                 <></>
                             ),
                     }))}
+                    orderBy={orderBy}
+                    handleOrderBy={handleOrderBy}
                 />
 
                 <Pagination
@@ -70,3 +92,30 @@ const View = () => {
 };
 
 export default View;
+
+const userTableHeaders = [
+    {
+        title: "Id",
+        value: "Id",
+        sortable: true,
+    },
+    {
+        title: "Name",
+        value: "Name",
+        sortable: true,
+    },
+    {
+        title: "Role",
+        value: "Role",
+        sortable: true,
+    },
+    {
+        title: "Last Modified",
+        value: "LastUpdatedAt",
+        sortable: true,
+    },
+    {
+        title: "Actions",
+        value: "Actions",
+    },
+];

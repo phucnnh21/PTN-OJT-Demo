@@ -7,7 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="LinqKit" Version="1.2.3" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\IMP.EFCore\IMP.EFCore.csproj" />
+    <ProjectReference Include="..\IMP.Helpers\IMP.Helpers.csproj" />
   </ItemGroup>
 
 </Project>

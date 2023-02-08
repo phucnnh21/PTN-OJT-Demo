@@ -10,7 +10,7 @@ namespace IMP.Infrastructure
         public Task<User> CreateUser(User user);
         public Task<User> DeleteUser(User user);
         public Task<User> UpdateUser(User user);
-        public Task<PaginationResponseDto<User>> FilterUsers(UserPaginationDbDto userPagination);
+        public Task<PaginationResponseDto<User>> FilterUsers(UserPaginationRequestDto userPagination);
         public Task<User?> GetByCondition(Expression<Func<User, bool>> expression);
     }
 }

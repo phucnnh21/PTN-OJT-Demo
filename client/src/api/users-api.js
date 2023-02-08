@@ -17,13 +17,12 @@ export const updateApi = async (userId, data) => {
 };
 
 export const filterApi = async (filter) => {
-    var path = apiRoute;
+    var path = apiRoute + "/filter";
 
-    if (filter && queryBuilder(filter)) {
-        path += queryBuilder(filter);
-    }
-
-    const res = await axios.get(path);
+    const res = await axios.post(path, {
+        ...filter,
+        searchColumns: ["name", "email"],
+    });
 
     return res.data;
 };

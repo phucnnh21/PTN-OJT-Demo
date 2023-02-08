@@ -42,9 +42,8 @@ const SearchBar = () => {
                 </div>
                 <input
                     type="text"
-                    id="voice-search"
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5"
-                    placeholder="Search for name..."
+                    placeholder="Search..."
                     ref={inputRef}
                 />
                 <button

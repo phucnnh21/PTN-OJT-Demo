@@ -59,8 +59,8 @@ namespace IMP.API.Controllers
             return Ok();
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Filter([FromQuery] UserPaginationRequestDto userPagination)
+        [HttpPost("filter")]
+        public async Task<IActionResult> Filter([FromBody] UserPaginationRequestDto userPagination)
         {
             PaginationResponseDto<UserReadDto> userListResult = await _userServices.FilterUser(userPagination);
 

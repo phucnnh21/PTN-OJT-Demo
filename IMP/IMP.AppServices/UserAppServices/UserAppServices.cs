@@ -26,24 +26,7 @@ namespace IMP.AppServices
 
         public async Task<PaginationResponseDto<UserReadDto>> FilterUser(UserPaginationRequestDto userPagination)
         {
-            UserPaginationDbDto userPaginationDbDto = _mapper.Map<UserPaginationDbDto>(userPagination);
-            ExpressionStarter<User> predicate = PredicateBuilder.New<User>(true);
-
-            // Filter by role
-            if (!String.IsNullOrWhiteSpace(userPagination.Role))
-            {
-                predicate.And(u => u.Role.ToLower() == userPagination.Role.ToLower());
-            }
-
-            // Search
-            if (!String.IsNullOrWhiteSpace(userPagination.Keyword))
-            {
-                predicate.And(u => u.Name.ToLower().Contains(userPagination.Keyword.ToLower()));
-            }
-
-            userPaginationDbDto.Expression = predicate;
-
-            PaginationResponseDto<User> userList = await _unitOfWork.UserRepository.FilterUsers(userPaginationDbDto);
+            PaginationResponseDto<User> userList = await _unitOfWork.UserRepository.FilterUsers(userPagination);
 
             PaginationResponseDto<UserReadDto> userListResult = _mapper.Map<PaginationResponseDto<UserReadDto>>(userList);
 

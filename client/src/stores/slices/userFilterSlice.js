@@ -6,6 +6,10 @@ const initialState = {
     keyword: "",
     role: "",
     total: 0,
+    orderBy: {
+        fieldName: "",
+        isAscending: false,
+    },
 };
 
 const userFilterSlice = createSlice({

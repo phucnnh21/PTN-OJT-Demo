@@ -1,15 +1,40 @@
 import React from "react";
+import Icon from "../Icon";
 
 import "./Table.css";
 
-const Table = ({ headers, data }) => {
+const Table = ({ headers, data, orderBy, handleOrderBy }) => {
     return (
         <table className="table-fixed border-collapse border border-slate-500 w-full my-8">
             <thead className="bg-gray-800 text-white">
                 <tr>
-                    {headers.map((header) => (
-                        <th key={header}>{header}</th>
-                    ))}
+                    {headers.map((header) => {
+                        if (header.sortable) {
+                            return (
+                                <th
+                                    key={header.value}
+                                    className="cursor-pointer"
+                                    onClick={() => handleOrderBy(header)}
+                                >
+                                    {header.title}{" "}
+                                    {header.value === orderBy.fieldName &&
+                                        (orderBy.isAscending ? (
+                                            <Icon icon="caret-down" />
+                                        ) : (
+                                            <Icon icon="caret-up" />
+                                        ))}
+                                </th>
+                            );
+                        }
+
+                        return (
+                            <th key={header.value}>
+                                {header.title}{" "}
+                                {header.value === orderBy.fieldName &&
+                                    (orderBy.isAscending ? <Icon /> : <Icon />)}
+                            </th>
+                        );
+                    })}
                 </tr>
             </thead>
             <tbody>

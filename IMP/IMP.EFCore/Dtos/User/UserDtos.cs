@@ -73,9 +73,8 @@ namespace IMP.EFCore
         public DateTime LastUpdatedAt { get; set; } = DateTime.Now;
     }
 
-    public class UserPaginationRequestDto : PaginationRequestDto
+    public class UserPaginationRequestDto : GenericQueryDto
     {
-        public string? Keyword { get; set; }
         public string? Role { get; set; }
     }
 

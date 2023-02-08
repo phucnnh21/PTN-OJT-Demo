@@ -16,10 +16,24 @@ namespace IMP.EFCore
         public int Size { get; set; } = 5;
     }
 
+    public class GenericQueryDto : PaginationRequestDto
+    {
+        public string Keyword { get; set; } = "";
+        public OrderByQuery? OrderBy { get; set; }
+        public string[] SearchColumns { get; set; } = new string[] { };
+    }
+
     public class PaginationResponseDto<T>
     {
         public int Total { get; set; } = 0;
 
         public IEnumerable<T> Payload { get; set; } = Enumerable.Empty<T>();
+    }
+
+    public class OrderByQuery
+    {
+        public string? FieldName { get; set; }
+
+        public bool IsAscending { get; set; } = false;
     }
 }

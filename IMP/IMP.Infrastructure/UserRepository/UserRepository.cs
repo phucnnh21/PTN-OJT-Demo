@@ -1,6 +1,9 @@
 ﻿using IMP.EFCore;
+using IMP.Helpers;
+using LinqKit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -82,18 +85,37 @@ namespace IMP.Infrastructure
             return user;
         }
 
-        public async Task<PaginationResponseDto<User>> FilterUsers(UserPaginationDbDto userPagination)
+        public async Task<PaginationResponseDto<User>> FilterUsers(UserPaginationRequestDto userPagination)
         {
-            int count = await _dbSet.Where(userPagination.Expression).CountAsync();
+            ExpressionStarter<User> predicate = PredicateBuilder.New<User>(true);
 
-            IEnumerable<User> users = await _dbSet
-                .Where(userPagination.Expression)
+            // Filter by role
+            if (!String.IsNullOrWhiteSpace(userPagination.Role))
+            {
+                predicate.And(u => u.Role.ToLower() == userPagination.Role.ToLower());
+            }
+
+            // Query filter
+            IQueryable <User> userFilterQuery = _dbSet.AsEnumerable().Where(predicate).AsQueryable();
+
+            // Query search
+            IQueryable<User> userSearchQuery = userFilterQuery
+                .Where(u => QueryHelpers.Match(u, userPagination))
+                .Select(u => new User { Id = u.Id, Name = u.Name, Role = u.Role, Email = u.Email, LastUpdatedAt = u.LastUpdatedAt });
+
+            // Sort
+            IQueryable<User> userSortQuery = QueryHelpers.OrderBy(userSearchQuery, userPagination.OrderBy);
+
+            // Query paginate
+            IQueryable<User> userPaginateQuery = userSortQuery
                 .Skip((userPagination.Page - 1) * userPagination.Size)
-                .Take(userPagination.Size)
-                .Select(u => new User { Id = u.Id, Name = u.Name, Role = u.Role, Email = u.Email, LastUpdatedAt = u.LastUpdatedAt })
-                .ToListAsync();
+                .Take(userPagination.Size);
 
-            return new PaginationResponseDto<User> { Payload = users, Total = count };
+            IEnumerable<User> payload = userPaginateQuery.ToList();
+            int total = userSearchQuery.Count();
+
+            return new PaginationResponseDto<User> { Payload = payload, Total = total };
         }
+       
     }
 }
