@@ -47,6 +47,12 @@ namespace IMP.API.Controllers
             return Ok(servicesResponse.Data);
         }
 
+        [HttpPost("verify-token")]
+        public IActionResult VerifyToken(UserTokenVerifyDto userToken)
+        {
+            return Ok(userToken);
+        }
+
         [HttpPost("password-create")]
         public async Task<IActionResult> PasswordCreate(UserPasswordCreateDto userPasswordCreateDto)
         {

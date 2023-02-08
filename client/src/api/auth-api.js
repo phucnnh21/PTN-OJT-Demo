@@ -20,6 +20,11 @@ export const changePasswordApi = async (data) => {
     return res;
 };
 
+export const verifyTokenApi = async (data) => {
+    const res = await axios.post(apiRoute + "/verify-token", data);
+    return res;
+};
+
 export const createPasswordApi = async (data) => {
     const res = await axios.post(apiRoute + "/password-create", data);
 

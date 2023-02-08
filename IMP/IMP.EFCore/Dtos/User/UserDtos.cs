@@ -57,6 +57,11 @@ namespace IMP.EFCore
         public string Password { get; set; } = null!;
     }
 
+    public class UserTokenVerifyDto
+    {
+        public string Token { get; set; } = null!;
+    }
+
     public class UserUpdateDto
     {
         [Required]

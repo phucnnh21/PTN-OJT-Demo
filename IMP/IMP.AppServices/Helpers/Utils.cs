@@ -1,7 +1,10 @@
-﻿using System;
+﻿using IMP.AppServices.Helpers;
+using Org.BouncyCastle.Asn1.Ocsp;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,6 +25,5 @@ namespace IMP.AppServices
             var finalExpression = Expression.Lambda<Func<T, bool>>(Expression.AndAlso(firstExpression.Body, invokedThird), firstExpression.Parameters);
             return finalExpression;
         }
-
     }
 }
