@@ -3,6 +3,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import authMiddleware from "./middlewares/authMiddlewares";
 
 import authSlice from "./slices/authSlice";
+import chatRoomSlice from "./slices/chatRoomSlice";
 import signalRConnectionSlice from "./slices/signalRConnectionSlice";
 import userFilterSlice from "./slices/userFilterSlice";
 
@@ -11,6 +12,7 @@ const store = configureStore({
         auth: authSlice,
         userFilter: userFilterSlice,
         signalRConnection: signalRConnectionSlice,
+        chatRoom: chatRoomSlice,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({

@@ -18,6 +18,8 @@ namespace IMP.EFCore
     {
         public string? Token { get; set; }
 
+        public string? CustomToken { get; set; }
+
         public UserAuthDto? User { get; set; }
     }
 

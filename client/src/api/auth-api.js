@@ -1,3 +1,5 @@
+import { getAuth, signInWithCustomToken } from "@firebase/auth";
+import { auth } from "../utils/firebase/firebase-config";
 import axios from "./axios-instance";
 
 const apiRoute = "/auth";
@@ -10,6 +12,12 @@ export const signUpApi = async (data) => {
 
 export const loginApi = async (data) => {
     const res = await axios.post(apiRoute + "/login", data);
+
+    const token = res.data.customToken;
+
+    const firebaseRes = await signInWithCustomToken(auth, token);
+
+    console.log(firebaseRes);
 
     return res.data;
 };

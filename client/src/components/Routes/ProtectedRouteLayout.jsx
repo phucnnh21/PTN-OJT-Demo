@@ -13,7 +13,7 @@ const ProtectedRouteLayout = () => {
     }
 
     return (
-        <PageWrapper className="flex flex-row flex-wrap">
+        <PageWrapper className="flex flex-row flex-wrap p-0">
             <Navbar />
             <div className="right">
                 <Outlet />

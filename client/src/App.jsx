@@ -14,6 +14,8 @@ import ViewUsers from "./pages/manage/users/View";
 import AdminRouteLayout from "./components/Routes/AdminRouteLayout";
 import PasswordCreate from "./pages/PasswordCreate";
 import { useHubConnection } from "./utils/hooks/useHubConnection";
+import ChatRoom from "./pages/manage/ChatRoom";
+import { auth } from "./utils/firebase/firebase-config";
 
 function App() {
     useHubConnection();
@@ -38,6 +40,8 @@ function App() {
                         />
 
                         <Route path="profile" element={<Profile />} />
+
+                        <Route path="chat" element={<ChatRoom />} />
 
                         <Route element={<AdminRouteLayout />}>
                             <Route path="users" element={<ViewUsers />} />

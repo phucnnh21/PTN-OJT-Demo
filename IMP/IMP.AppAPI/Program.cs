@@ -1,5 +1,7 @@
+using FirebaseAdmin;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Google.Apis.Auth.OAuth2;
 using IMP.AppServices;
 using IMP.AppServices.Validators;
 using IMP.EFCore;
@@ -14,6 +16,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext(builder.Configuration);
 builder.Services.AddInfrastructureSevice();
 builder.Services.AddAppSevice(builder.Configuration);
+
+System.Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", "D:\\Projects\\ptn-demo-firebase-adminsdk-xqn0i-7e6cb169a6.json");
+
+FirebaseApp.Create(new AppOptions()
+{
+    Credential = GoogleCredential.GetApplicationDefault(),
+    ServiceAccountId = "firebase-adminsdk-xqn0i@ptn-demo.iam.gserviceaccount.com"
+});
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(opt =>

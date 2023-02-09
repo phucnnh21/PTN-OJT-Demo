@@ -7,6 +7,7 @@ export const HUB_BASE_URL =
 export const managePageList = [
     { name: "Profile", path: "/manage/profile" },
     { name: "Update Password", path: "/manage/password-update" },
+    { name: "Chat", path: "/manage/chat" },
 ];
 
 export const adminManagePageList = [

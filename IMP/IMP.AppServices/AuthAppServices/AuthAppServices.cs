@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using FirebaseAdmin.Auth;
 using IMP.EFCore;
 using IMP.Helpers;
 using IMP.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using System.Security.Claims;
+using System.Security.Principal;
 
 namespace IMP.AppServices
 {
@@ -49,10 +51,20 @@ namespace IMP.AppServices
 
             string accessToken = _jwtGenerator.GenerateToken(claims, 2 * 24 * 60); // 2 days
 
+            var additionalClaims = new Dictionary<string, object>()
+            {
+                { "id", userFromRepo.Id },
+                { "email", userFromRepo.Email },
+                { "name", userFromRepo.Name },
+                { "role", userFromRepo.Role }
+            };
+
+            string customToken = await FirebaseAuth.DefaultInstance.CreateCustomTokenAsync($"{userFromRepo.Id}", additionalClaims);
+
             // Map user data for front-end display
             UserAuthDto userAuth = _mapper.Map<UserAuthDto>(userFromRepo);
 
-            return new AuthReponseDto { Token = accessToken, User = userAuth };
+            return new AuthReponseDto { Token = accessToken, CustomToken = customToken, User = userAuth };
         }
 
         public async Task<ServicesResponseDto<UserAuthDto>> Signup(UserCreateDto userCreate)
