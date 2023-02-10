@@ -12,6 +12,19 @@
     left: 0;
 }
 
+.menu-btn {
+    position: fixed;
+    z-index: 69;
+    top: 0;
+    left: 0;
+    transition: 1.2s;
+    height: 44px;
+    width: 44px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .right {
     width: 100vw;
 }
@@ -37,5 +50,9 @@
     .right {
         margin-left: 20vw;
         width: 80vw;
+    }
+
+    .menu-btn {
+        display: none;
     }
 }

@@ -4,13 +4,17 @@ import ChatBox from "./ChatBox";
 import ChatMessages from "./ChatMessages";
 
 import { useDispatch, useSelector } from "react-redux";
-import { handleAccessChatRoom } from "../../api/firestore-api";
-import { setChatRoom } from "../../stores/slices/chatRoomSlice";
+import { setChatRoomAsync } from "../../stores/slices/chatRoomSlice";
 import ChatSearchUser from "./ChatSearchUser";
+import Badge from "../Icon/Badge";
+import { deleteNoti } from "../../api/firestore-api";
 
 const ChatRoomAdmin = () => {
     const auth = useSelector((state) => state.auth);
     const chatRoom = useSelector((state) => state.chatRoom);
+    const messagesNotifications = useSelector(
+        (state) => state.messagesNotifications
+    );
     const dispatch = useDispatch();
 
     // Data to fill in the table
@@ -39,9 +43,23 @@ const ChatRoomAdmin = () => {
             .catch((err) => console.log(err));
     }, [userFilter]);
 
+    const showNumberOfNoti = (user) => {
+        const numberOfRoomNoti = messagesNotifications.filter(
+            (noti) => noti.sender == user.email
+        ).length;
+
+        if (numberOfRoomNoti)
+            return (
+                <Badge
+                    content={numberOfRoomNoti}
+                    className="absolute right-[1px] bottom-[50%] translate-y-1/2"
+                />
+            );
+    };
+
     return (
         <div className="w-full h-screen flex bg-white flex-row">
-            <div className="h-screen w-1/4 border-r relative pt-[5rem]">
+            <div className="h-screen w-1/4 border-r relative pt-32 md:pt-20">
                 <ChatSearchUser
                     userFilter={userFilter}
                     setUserFilter={setUserFilter}
@@ -50,26 +68,41 @@ const ChatRoomAdmin = () => {
                     {tableData.map((user) => (
                         <div
                             key={user.id}
-                            className="border-y p-4 cursor-pointer w-full overflow-x-scroll hide-scrollbar"
+                            className={`relative flex flex-row justify-between border-y p-4 cursor-pointer w-full overflow-x-scroll hide-scrollbar ${
+                                chatRoom?.userEmail === user.email &&
+                                "bg-blue-200"
+                            }`}
                             onClick={async () => {
                                 dispatch(
-                                    setChatRoom({
-                                        roomId: await handleAccessChatRoom(
-                                            auth,
-                                            user
-                                        ),
+                                    setChatRoomAsync({
+                                        user1: auth,
+                                        user2: user,
                                         userEmail: user.email,
                                     })
                                 );
+
+                                deleteNoti({
+                                    sender: user.email,
+                                    receiver: auth.email,
+                                });
                             }}
                         >
-                            {user.email}
+                            <span>{user.email}</span>
+                            {showNumberOfNoti(user)}
                         </div>
                     ))}
                 </div>
             </div>
             {chatRoom && (
-                <div className="h-screen w-3/4 flex flex-col justify-between bg-gray-100 p-6">
+                <div
+                    className="h-screen w-3/4 flex flex-col justify-between bg-gray-100 p-6"
+                    onClick={() => {
+                        deleteNoti({
+                            sender: chatRoom.userEmail,
+                            receiver: auth.email,
+                        });
+                    }}
+                >
                     <div className="w-full">
                         <h3 className="font-bold text-lg mb-4">
                             Chat with {chatRoom.userEmail}

@@ -1,4 +1,11 @@
-import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import {
+    addDoc,
+    collection,
+    getDocs,
+    query,
+    where,
+    writeBatch,
+} from "firebase/firestore";
 import { db } from "../utils/firebase/firebase-config";
 
 export const handleAccessChatRoom = async (user1, user2) => {
@@ -25,4 +32,39 @@ export const handleAccessChatRoom = async (user1, user2) => {
     } else {
         return querySnapshot.docs[0].id;
     }
+};
+
+export const sendNotification = async (messagesNotification) => {
+    const messagesNotificationsCollectionRef = collection(
+        db,
+        "messagesNotifications"
+    );
+
+    await addDoc(messagesNotificationsCollectionRef, messagesNotification);
+};
+
+export const deleteNoti = async ({ sender, receiver }) => {
+    var q = null;
+
+    if (sender) {
+        q = query(
+            collection(db, "messagesNotifications"),
+            where("receiver", "==", receiver),
+            where("sender", "==", sender)
+        );
+    } else {
+        q = query(
+            collection(db, "messagesNotifications"),
+            where("receiver", "==", receiver)
+        );
+    }
+
+    var batch = writeBatch(db);
+
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+        batch.delete(doc.ref);
+    });
+
+    await batch.commit();
 };

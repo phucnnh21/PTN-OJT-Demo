@@ -14,7 +14,7 @@ const ChatSearchUser = ({ userFilter, setUserFilter }) => {
     };
 
     return (
-        <div className="absolute top-0 p-4 w-full">
+        <div className="absolute top-0 p-4 pt-16 md:pt-4 w-full">
             <form className="relative w-full" onSubmit={handleSubmit}>
                 <input
                     type="text"

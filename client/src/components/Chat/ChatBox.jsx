@@ -1,13 +1,14 @@
-import { collection, doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import React, { useRef } from "react";
 import { useSelector } from "react-redux";
+import { sendNotification } from "../../api/firestore-api";
 import { db } from "../../utils/firebase/firebase-config";
 import Icon from "../Icon";
 
 const ChatBox = () => {
     const inputRef = useRef(null);
 
-    const chatRoom = useSelector((state) => state.chatRoom.roomId);
+    const chatRoom = useSelector((state) => state.chatRoom);
     const auth = useSelector((state) => state.auth);
 
     const handleSubmit = async (e) => {
@@ -17,7 +18,7 @@ const ChatBox = () => {
             return;
         }
 
-        const docRef = doc(db, "messages", chatRoom);
+        const docRef = doc(db, "messages", chatRoom.roomId);
         const docSnap = await getDoc(docRef);
 
         const docData = docSnap.data();
@@ -30,10 +31,16 @@ const ChatBox = () => {
 
         inputRef.current.value = "";
 
-        await setDoc(doc(db, "messages", chatRoom), {
+        await setDoc(doc(db, "messages", chatRoom.roomId), {
             messages: docData
                 ? [...docData.messages, newMessage]
                 : [newMessage],
+        });
+
+        await sendNotification({
+            sender: auth.email,
+            receiver: chatRoom.userEmail,
+            roomId: chatRoom.roomId,
         });
     };
 

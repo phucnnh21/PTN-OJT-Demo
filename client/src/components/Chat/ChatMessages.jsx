@@ -18,8 +18,6 @@ const ChatMessages = () => {
                 } else {
                     setMessages([]);
                 }
-
-                bottomRef.current.scrollIntoView({ behavior: "smooth" });
             });
 
             return () => {
@@ -28,6 +26,7 @@ const ChatMessages = () => {
         };
 
         if (chatRoom) return getMessages();
+        bottomRef.current.scrollIntoView({ behavior: "smooth" });
     }, [chatRoom]);
 
     useEffect(() => {

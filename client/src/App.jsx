@@ -15,10 +15,11 @@ import AdminRouteLayout from "./components/Routes/AdminRouteLayout";
 import PasswordCreate from "./pages/PasswordCreate";
 import { useHubConnection } from "./utils/hooks/useHubConnection";
 import ChatRoom from "./pages/manage/ChatRoom";
-import { auth } from "./utils/firebase/firebase-config";
+import { useMessagesNotfificatios } from "./utils/hooks/useMessagesNotifications";
 
 function App() {
     useHubConnection();
+    useMessagesNotfificatios();
 
     return (
         <>

@@ -2,19 +2,37 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 
-import {
-    managePageList,
-    adminManagePageList,
-    Role,
-} from "../../utils/constants";
+import { Role } from "../../utils/constants";
 
 import "./Navbar.css";
 import LogoutButton from "./LogoutButton";
+import Badge from "../Icon/Badge";
 
 const Navbar = ({ className }) => {
     const auth = useSelector((state) => state.auth);
+    const messagesNotifications = useSelector(
+        (state) => state.messagesNotifications
+    );
 
     const location = useLocation();
+
+    const managePageList = [
+        { name: "Profile", path: "/manage/profile" },
+        { name: "Update Password", path: "/manage/password-update" },
+        {
+            name: "Chat",
+            path: "/manage/chat",
+            extra:
+                messagesNotifications.length == 0 ? undefined : (
+                    <Badge content={messagesNotifications.length} />
+                ),
+        },
+    ];
+
+    const adminManagePageList = [
+        ...managePageList,
+        { name: "Manage Users", path: "/manage/users" },
+    ];
 
     let pageList =
         auth.role === Role.ADMIN ? adminManagePageList : managePageList;
@@ -35,6 +53,7 @@ const Navbar = ({ className }) => {
                         to={item.path}
                     >
                         <span>{item.name}</span>
+                        {item.extra}
                     </Link>
                 ))}
             </div>

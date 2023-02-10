@@ -4,17 +4,6 @@ export const API_BASE_URL =
 export const HUB_BASE_URL =
     import.meta.env.VITE_HUB_BASE_URL || "http://localhost:5171";
 
-export const managePageList = [
-    { name: "Profile", path: "/manage/profile" },
-    { name: "Update Password", path: "/manage/password-update" },
-    { name: "Chat", path: "/manage/chat" },
-];
-
-export const adminManagePageList = [
-    ...managePageList,
-    { name: "Manage Users", path: "/manage/users" },
-];
-
 export const Role = {
     ADMIN: "admin",
     USER: "user",
