@@ -23,7 +23,7 @@ namespace IMP.AppServices.Validators
                 .MaximumLength(50).WithMessage("Password is at most 50 characters!")
                 .Matches(AppConstants.Password.Regex).WithMessage(AppConstants.Password.ErrorMessage);
 
-            RuleFor(a => a).CustomAsync(async (request, context, cancellationToken) => {
+            RuleFor(a => a).Custom( (request, context) => {
                 if (request.NewPassword != request.ConfirmPassword)
                 {
                     context.AddFailure("Password Confirm must match!");
@@ -33,7 +33,7 @@ namespace IMP.AppServices.Validators
 
                 var expression = Utils.ConcatLambdaExpression<User>(u => u.Id == request.Id, u => u.Password == oldPasswordHashed);
 
-                User? userFromRepo = await _userRepository.GetByCondition(expression);
+                User? userFromRepo = _userRepository.GetByCondition(expression).Result;
 
                 // Validate old password
                 if (userFromRepo == null)

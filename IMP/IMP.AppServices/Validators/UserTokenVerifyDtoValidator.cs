@@ -15,7 +15,7 @@ namespace IMP.AppServices.Validators
             _jwtGenerator = jwtGenerator;
             _unitOfWork = unitOfWork;
 
-            RuleFor(u => u).CustomAsync(async (request, context, cancellationToken) => {
+            RuleFor(u => u).Custom((request, context) => {
                 // Get data from Token
                 ClaimsPrincipal? claimsPrincipal = _jwtGenerator.GetPrincipalFromToken(request.Token, true);
 
@@ -28,7 +28,7 @@ namespace IMP.AppServices.Validators
                 string? userEmail = claimsPrincipal.FindFirst(ClaimTypes.Email)?.Value;
 
                 // Check if email exist
-                bool userExist = (await _unitOfWork.UserRepository.GetByCondition(u => u.Email == userEmail)) is not null;
+                bool userExist = (_unitOfWork.UserRepository.GetByCondition(u => u.Email == userEmail).Result) is not null;
 
                 if (userExist)
                 {
