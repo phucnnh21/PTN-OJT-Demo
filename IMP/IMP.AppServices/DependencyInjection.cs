@@ -15,7 +15,9 @@ namespace IMP.AppServices
             services.AddScoped<IUserAppServices, UserAppServices>();
             services.AddScoped<IAuthAppServices, AuthAppServices>();
 
-            services.AddSingleton<IJwtGenerator>(new JwtGenerator(configuration["Jwt:Key"]));
+            var jwtKey = Environment.GetEnvironmentVariable("JWT_Key") ?? configuration["Jwt:Key"] ?? String.Empty;
+
+            services.AddSingleton<IJwtGenerator>(new JwtGenerator(jwtKey));
 
             return services;
         }

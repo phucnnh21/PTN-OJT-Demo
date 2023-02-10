@@ -9,13 +9,15 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(opt =>
     {
+        string jwtKey = Environment.GetEnvironmentVariable("JWT_Key") ?? builder.Configuration["Jwt:Key"] ?? String.Empty;
+
         opt.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateLifetime = true,
             ValidateIssuer = false,
             ValidateAudience = false,
             ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration["Jwt:Key"]))
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtKey))
         };
 
         opt.Events = new JwtBearerEvents

@@ -10,8 +10,10 @@ builder.Services.AddBackgroundSevices(builder.Configuration);
 
 builder.Services.AddCors();
 
+string hangfireDb = Environment.GetEnvironmentVariable("ConnectionString_Hangfire") ?? builder.Configuration.GetConnectionString("Hangfire") ?? string.Empty;
+
 // Hangfire
-builder.Services.AddHangfire(config => config.UsePostgreSqlStorage(builder.Configuration.GetConnectionString("Hangfire")));
+builder.Services.AddHangfire(config => config.UsePostgreSqlStorage(hangfireDb));
 builder.Services.AddHangfireServer();
 
 builder.Services.AddControllers();
@@ -43,8 +45,8 @@ app.UseHangfireDashboard(
     {
         Authorization = new[]  {
                 new HangfireCustomBasicAuthenticationFilter {
-                    User = builder.Configuration.GetValue<string>("HangfireSettings:UserName"),
-                    Pass = builder.Configuration.GetValue<string>("HangfireSettings:Password")
+                    User = Environment.GetEnvironmentVariable("Hangfire_User") ?? builder.Configuration.GetValue<string>("HangfireSettings:UserName"),
+                    Pass = Environment.GetEnvironmentVariable("Hangfire_Password") ?? builder.Configuration.GetValue<string>("HangfireSettings:Password")
                 }
             }
     });
