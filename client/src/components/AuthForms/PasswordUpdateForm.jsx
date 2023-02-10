@@ -10,8 +10,11 @@ import Button from "../Form/Button";
 import { changePasswordApi, signUpApi } from "../../api/auth-api.js";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../stores/slices/authSlice.js";
+import { useLoading } from "../../utils/hooks/useLoading.js";
 
 const PasswordUpdateForm = () => {
+    const { setLoading, setIdle } = useLoading();
+
     // Form init
     const {
         register,
@@ -27,6 +30,7 @@ const PasswordUpdateForm = () => {
 
     // HandleSubmit
     const handleSubmitForm = (data) => {
+        setLoading();
         changePasswordApi({ ...data, id: auth.id })
             .then((res) => {
                 if (res.status == 200) {
@@ -50,7 +54,8 @@ const PasswordUpdateForm = () => {
                 } else {
                     toast.error(err.response.data);
                 }
-            });
+            })
+            .finally(() => setIdle());
     };
 
     return (

@@ -11,8 +11,11 @@ import { loginApi } from "../../api/auth-api.js";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { login } from "../../stores/slices/authSlice.js";
+import { useLoading } from "../../utils/hooks/useLoading.js";
 
 const LoginForm = () => {
+    const { setLoading, setIdle } = useLoading();
+
     // Form init
     const {
         register,
@@ -26,6 +29,7 @@ const LoginForm = () => {
     const dispatch = useDispatch();
     // HandleSubmit
     const handleSubmitForm = (data) => {
+        setLoading();
         loginApi(data)
             .then((res) => {
                 toast.success("Login success!");
@@ -34,7 +38,8 @@ const LoginForm = () => {
             .catch((err) => {
                 console.log(err);
                 toast.error(err.response.data);
-            });
+            })
+            .finally(() => setIdle());
     };
 
     return (

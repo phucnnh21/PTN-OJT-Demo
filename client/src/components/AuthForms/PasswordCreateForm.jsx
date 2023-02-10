@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { createPasswordApi } from "../../api/auth-api";
+import { useLoading } from "../../utils/hooks/useLoading";
 import yup from "../../utils/yup-config";
 import Button from "../Form/Button";
 import Input from "../Form/Input";
@@ -11,6 +12,7 @@ import Input from "../Form/Input";
 const PasswordCreateForm = () => {
     const [searchParams] = useSearchParams();
     const token = searchParams.get("token");
+    const { setLoading, setIdle } = useLoading();
 
     // Form init
     const {
@@ -26,6 +28,7 @@ const PasswordCreateForm = () => {
 
     // HandleSubmit
     const handleSubmitForm = (data) => {
+        setLoading();
         createPasswordApi({
             ...data,
             token,
@@ -36,7 +39,8 @@ const PasswordCreateForm = () => {
             })
             .catch(() => {
                 toast.error("Failed to create account, please signup again!");
-            });
+            })
+            .finally(() => setIdle());
     };
 
     return (

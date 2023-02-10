@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { updateApi, viewDetailApi } from "../../api/users-api";
 import { reload } from "../../stores/slices/userFilterSlice";
+import { useLoading } from "../../utils/hooks/useLoading";
 
 import Swal from "../../utils/swal-helpers";
 import yup from "../../utils/yup-config";
@@ -49,6 +50,8 @@ const Edit = ({ data }) => {
 export default Edit;
 
 function EditForm({ oldData }) {
+    const { setLoading, setIdle } = useLoading();
+
     // Form init
     const {
         register,
@@ -64,7 +67,9 @@ function EditForm({ oldData }) {
 
     // HandleSubmit
     const handleSubmitForm = (data) => {
+        setLoading();
         updateApi(oldData.id, data).then((res) => {
+            setIdle();
             if (res.status == 200) {
                 toast.success("User Edited");
                 Swal.close();

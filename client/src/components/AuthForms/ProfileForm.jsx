@@ -10,8 +10,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateApi, viewDetailApi } from "../../api/users-api.js";
 import { toast } from "react-toastify";
 import { editProfile } from "../../stores/slices/authSlice.js";
+import { useLoading } from "../../utils/hooks/useLoading.js";
 
 const ProfileForm = () => {
+    const { setLoading, setIdle } = useLoading();
     // Form init
     const {
         register,
@@ -28,12 +30,15 @@ const ProfileForm = () => {
 
     // HandleSubmit
     const handleSubmitForm = (data) => {
-        updateApi(auth.id, data).then((res) => {
-            if (res.status == 200) {
-                toast.success("Profile updated");
-                dispatch(editProfile(data.name));
-            }
-        });
+        setLoading();
+        updateApi(auth.id, data)
+            .then((res) => {
+                if (res.status == 200) {
+                    toast.success("Profile updated");
+                    dispatch(editProfile(data.name));
+                }
+            })
+            .finally(() => setIdle());
     };
 
     React.useEffect(() => {

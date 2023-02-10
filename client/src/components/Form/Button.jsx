@@ -1,3 +1,4 @@
+import { useSelector } from "react-redux";
 import "./Button.css";
 
 const Button = ({
@@ -8,12 +9,21 @@ const Button = ({
     border = false,
     ...props
 }) => {
+    const loading = useSelector((state) => state.loading);
+
+    const isLoading = loading === "loading";
+
     return (
         <button
             className={`btn-app ${className} ${
                 `${border}` === "true" ? "border-2 border-slate-900" : ""
             }`}
-            style={{ ...buttonVariants[variant], ...style }}
+            style={{
+                ...buttonVariants[variant],
+                ...style,
+                opacity: isLoading ? "0.5" : "1",
+            }}
+            disabled={isLoading}
             {...props}
         >
             {children}

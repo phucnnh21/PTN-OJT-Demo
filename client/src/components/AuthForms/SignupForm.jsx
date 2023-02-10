@@ -8,8 +8,11 @@ import yup from "../../utils/yup-config.js";
 import Input from "../Form/Input";
 import Button from "../Form/Button";
 import { signUpApi } from "../../api/auth-api.js";
+import { useLoading } from "../../utils/hooks/useLoading.js";
 
 const SignupForm = () => {
+    const { setLoading, setIdle } = useLoading();
+
     // Form init
     const {
         register,
@@ -22,13 +25,15 @@ const SignupForm = () => {
 
     // HandleSubmit
     const handleSubmitForm = (data) => {
+        setLoading();
         signUpApi(data)
             .then(() => {
                 toast.success("An email has been sent to you!");
             })
             .catch((err) => {
                 toast.error(err.response.data);
-            });
+            })
+            .finally(() => setIdle());
     };
 
     return (
