@@ -17,12 +17,11 @@ builder.Services.AddDbContext(builder.Configuration);
 builder.Services.AddInfrastructureSevice();
 builder.Services.AddAppSevice(builder.Configuration);
 
-System.Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", "D:\\Projects\\ptn-demo-firebase-adminsdk-xqn0i-7e6cb169a6.json");
-
-FirebaseApp.Create(new AppOptions()
+string credBase64 = Environment.GetEnvironmentVariable("FIREBASE_TOKEN") ?? builder.Configuration.GetValue<string>("FirebaseToken") ?? "";
+string cred = System.Text.Encoding.UTF8.GetString(System.Convert.FromBase64String(credBase64)); // Raw JSON cause error in ENV
+FirebaseApp.Create(new AppOptions
 {
-    Credential = GoogleCredential.GetApplicationDefault(),
-    ServiceAccountId = "firebase-adminsdk-xqn0i@ptn-demo.iam.gserviceaccount.com"
+    Credential = GoogleCredential.FromJson(cred),
 });
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
