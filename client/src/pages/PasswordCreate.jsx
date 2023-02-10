@@ -19,7 +19,8 @@ const PasswordCreate = () => {
             .then(() => {
                 setLoading(false);
             })
-            .catch(() => {
+            .catch((err) => {
+                console.log(err);
                 navigate("/");
             });
     }, []);

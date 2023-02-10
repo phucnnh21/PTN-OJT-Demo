@@ -4,6 +4,8 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>03a1b823-1592-4f8e-ba1b-5ec49fb2cd65</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,6 +13,7 @@
 	<PackageReference Include="Hangfire.Core" Version="1.7.31" />
 	<PackageReference Include="Hangfire.Dashboard.Basic.Authentication" Version="5.0.0" />
 	<PackageReference Include="Hangfire.PostgreSql" Version="1.9.8" />
+	<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
