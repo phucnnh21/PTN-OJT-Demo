@@ -18,7 +18,10 @@ namespace IMP.EFCore
                 .AddJsonFile("appsettings.Development.json", optional: true, reloadOnChange: true);
 
             IConfigurationRoot configuration = builder.Build();
-            optionsBuilder.UseNpgsql(configuration.GetConnectionString("AppDB"));
+
+            var connectionString = Environment.GetEnvironmentVariable("ConnectionString_AppDB") ?? configuration.GetConnectionString("AppDB");
+
+            optionsBuilder.UseNpgsql(connectionString);
 
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
         }
