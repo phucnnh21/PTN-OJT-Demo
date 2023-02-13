@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setChatRoomAsync } from "../../stores/slices/chatRoomSlice";
 import ChatSearchUser from "./ChatSearchUser";
 import Badge from "../Icon/Badge";
-import { deleteNoti } from "../../api/firestore-api";
+import { deleteNoti, loadChatRoom } from "../../api/firestore-api";
 
 const ChatRoomAdmin = () => {
     const auth = useSelector((state) => state.auth);
@@ -33,14 +33,25 @@ const ChatRoomAdmin = () => {
     });
 
     useEffect(() => {
-        filterApi(userFilter)
-            .then((res) => {
-                setTableData(res.payload.filter((item) => item.id != auth.id));
-                if (total != res.total) {
-                    setTotal(res.total);
+        if (userFilter.keyword) {
+            filterApi(userFilter)
+                .then((res) => {
+                    setTableData(
+                        res.payload.filter((item) => item.id != auth.id)
+                    );
+                    if (total != res.total) {
+                        setTotal(res.total);
+                    }
+                })
+                .catch((err) => console.log(err));
+        } else {
+            loadChatRoom(auth).then((res) => {
+                setTableData(res);
+                if (total != res.length) {
+                    setTotal(res.length);
                 }
-            })
-            .catch((err) => console.log(err));
+            });
+        }
     }, [userFilter]);
 
     const showNumberOfNoti = (user) => {
@@ -68,9 +79,9 @@ const ChatRoomAdmin = () => {
                     {tableData.map((user) => (
                         <div
                             key={user.id}
-                            className={`relative flex flex-row justify-between border-y p-4 cursor-pointer w-full overflow-x-scroll hide-scrollbar ${
+                            className={`relative flex flex-row justify-between border-y p-4 cursor-pointer w-full overflow-x-scroll hide-scrollbar hover:bg-blue-50 ${
                                 chatRoom?.userEmail === user.email &&
-                                "bg-blue-200"
+                                "bg-blue-200 hover:bg-blue-200"
                             }`}
                             onClick={async () => {
                                 dispatch(

@@ -1,10 +1,12 @@
 import {
     addDoc,
     collection,
+    getDoc,
     getDocs,
     query,
     where,
     writeBatch,
+    doc,
 } from "firebase/firestore";
 import { db } from "../utils/firebase/firebase-config";
 
@@ -67,4 +69,39 @@ export const deleteNoti = async ({ sender, receiver }) => {
     });
 
     await batch.commit();
+};
+
+export const loadChatRoom = async (auth) => {
+    const chatRoomsCollectionRef = collection(db, "chatRooms");
+    const q = query(
+        chatRoomsCollectionRef,
+        where(`members.${auth.id}`, "==", auth.email)
+    );
+
+    const querySnapshot = await getDocs(q);
+    var res = [];
+
+    for (let document of querySnapshot.docs) {
+        const messageDocRef = doc(db, "messages", document.id);
+        const docSnap = await getDoc(messageDocRef);
+
+        if (docSnap.exists()) {
+            const messageDoc = docSnap.data();
+
+            if (messageDoc.messages.length) {
+                let docData = document.data();
+
+                for (let member in docData.members) {
+                    if (member != auth.id) {
+                        res.push({
+                            id: member,
+                            email: docData.members[member],
+                        });
+                    }
+                }
+            }
+        }
+    }
+
+    return res;
 };

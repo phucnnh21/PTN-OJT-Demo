@@ -1,16 +1,14 @@
-import { useSelector } from "react-redux";
 import "./Button.css";
 
-const Button = ({
+const ButtonLoading = ({
     children,
     className = "",
     style = {},
     variant = "primary",
     border = false,
+    loading,
     ...props
 }) => {
-    const loading = useSelector((state) => state.loading);
-
     const isLoading = loading === "loading";
 
     return (
@@ -30,7 +28,7 @@ const Button = ({
     );
 };
 
-export default Button;
+export default ButtonLoading;
 
 export const buttonVariants = {
     primary: "bg-teal-500 text-white hover:bg-teal-600",

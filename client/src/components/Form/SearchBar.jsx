@@ -52,8 +52,7 @@ const SearchBar = () => {
             </div>
 
             <select
-                id="countries"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block ml-2 p-2.5"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block ml-2 p-2.5 cursor-pointer"
                 value={role}
                 onChange={(e) => {
                     dispatch(setFilter({ role: e.target.value }));

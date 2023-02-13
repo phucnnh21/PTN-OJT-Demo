@@ -1,4 +1,4 @@
-import { getAuth, signInWithCustomToken } from "@firebase/auth";
+import { signInWithCustomToken } from "@firebase/auth";
 import { auth } from "../utils/firebase/firebase-config";
 import axios from "./axios-instance";
 

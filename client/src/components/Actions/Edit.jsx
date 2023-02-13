@@ -1,5 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
@@ -10,6 +10,7 @@ import { useLoading } from "../../utils/hooks/useLoading";
 import Swal from "../../utils/swal-helpers";
 import yup from "../../utils/yup-config";
 import Button from "../Form/Button";
+import ButtonLoading from "../Form/ButtonLoading";
 import Input from "../Form/Input";
 import Icon from "../Icon";
 
@@ -31,6 +32,7 @@ const Edit = ({ data }) => {
                 ),
                 showCancelButton: false,
                 showConfirmButton: false,
+                target: "#page-wrapper",
             }).then(() => {
                 dispatch(reload());
             });
@@ -50,7 +52,7 @@ const Edit = ({ data }) => {
 export default Edit;
 
 function EditForm({ oldData }) {
-    const { setLoading, setIdle } = useLoading();
+    const [loading, setLoading] = useState("idle");
 
     // Form init
     const {
@@ -67,9 +69,9 @@ function EditForm({ oldData }) {
 
     // HandleSubmit
     const handleSubmitForm = (data) => {
-        setLoading();
+        setLoading("loading");
         updateApi(oldData.id, data).then((res) => {
-            setIdle();
+            setLoading("idle");
             if (res.status == 200) {
                 toast.success("User Edited");
                 Swal.close();
@@ -95,9 +97,9 @@ function EditForm({ oldData }) {
                 placeholder="Please enter your Address"
                 register={register("address")}
             />
-            <Button className="mt-2.5 block" type="submit">
+            <ButtonLoading className="mt-2.5 block" type="submit">
                 Edit
-            </Button>
+            </ButtonLoading>
         </form>
     );
 }

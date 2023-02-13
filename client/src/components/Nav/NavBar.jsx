@@ -48,7 +48,7 @@ const Navbar = ({ className }) => {
                         className={`nav-item ${
                             location.pathname.startsWith(item.path)
                                 ? "bg-gray-100 text-black"
-                                : "text-white"
+                                : "text-white hover:bg-gray-600"
                         } rounded flex flex-row justify-between items-center my-2 font-semibold`}
                         to={item.path}
                     >
