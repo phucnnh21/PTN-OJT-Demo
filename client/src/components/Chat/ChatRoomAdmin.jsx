@@ -79,9 +79,10 @@ const ChatRoomAdmin = () => {
                     {tableData.map((user) => (
                         <div
                             key={user.id}
-                            className={`relative flex flex-row justify-between border-y p-4 cursor-pointer w-full overflow-x-scroll hide-scrollbar hover:bg-blue-50 ${
-                                chatRoom?.userEmail === user.email &&
-                                "bg-blue-200 hover:bg-blue-200"
+                            className={`relative flex flex-row justify-between border-y p-4 cursor-pointer w-full overflow-x-scroll hide-scrollbar ${
+                                chatRoom?.userEmail === user.email
+                                    ? "bg-blue-200 hover:bg-blue-200"
+                                    : "hover:bg-blue-50"
                             }`}
                             onClick={async () => {
                                 dispatch(
