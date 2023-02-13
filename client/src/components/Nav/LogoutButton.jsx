@@ -27,7 +27,7 @@ const LogoutButton = () => {
     return (
         <button
             key="logout"
-            className={`nav-item bg-red-100 text-black rounded flex flex-row justify-between items-center my-2 font-semibold`}
+            className={`nav-item bg-red-100 hover:bg-red-300 text-black rounded flex flex-row justify-between items-center my-2 font-semibold`}
             onClick={handleLogout}
         >
             <span>Logout</span>
