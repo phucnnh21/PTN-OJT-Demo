@@ -3,6 +3,7 @@
     width: 26px;
     border-radius: 100%;
     border: none;
+    margin: 0 2px;
 }
 
 .page-btn.active {

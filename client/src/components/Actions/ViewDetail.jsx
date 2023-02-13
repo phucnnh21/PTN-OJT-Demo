@@ -3,6 +3,7 @@ import Icon from "../Icon";
 import Swal from "../../utils/swal-helpers";
 import { viewDetailApi } from "../../api/users-api";
 import moment from "moment";
+import Tippy from "@tippyjs/react";
 
 const ViewDetail = ({ data }) => {
     const handleViewDetail = () => {
@@ -44,12 +45,11 @@ const ViewDetail = ({ data }) => {
     };
 
     return (
-        <Icon
-            icon="eye"
-            color="rgb(5 150 105)"
-            className="cursor-pointer"
-            onClick={handleViewDetail}
-        />
+        <Tippy content="View Detail">
+            <button onClick={handleViewDetail}>
+                <Icon icon="eye" color="rgb(5 150 105)" />
+            </button>
+        </Tippy>
     );
 };
 

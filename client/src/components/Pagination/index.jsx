@@ -128,7 +128,7 @@ const Pagination = ({
                                 <button
                                     onClick={() => setCurrentPage(1)}
                                     style={pageBtnStyle}
-                                    className="btn page-btn flex justify-center items-center"
+                                    className="btn page-btn flex justify-center items-center hover:bg-gray-200"
                                 >
                                     <Icon icon="angle-double-left" size="lg" />
                                 </button>
@@ -141,7 +141,7 @@ const Pagination = ({
                                 <button
                                     onClick={() => setCurrentPage(maxPage)}
                                     style={pageBtnStyle}
-                                    className="btn page-btn flex justify-center items-center"
+                                    className="btn page-btn flex justify-center items-center hover:bg-gray-200"
                                 >
                                     <Icon icon="angle-double-right" size="lg" />
                                 </button>
@@ -156,7 +156,7 @@ const Pagination = ({
                                         setCurrentPage(currentPage - 1)
                                     }
                                     style={pageBtnStyle}
-                                    className="btn page-btn flex justify-center items-center"
+                                    className="btn page-btn flex justify-center items-center hover:bg-gray-200"
                                 >
                                     <Icon icon="angle-left" size="lg" />
                                 </button>
@@ -171,7 +171,7 @@ const Pagination = ({
                                         setCurrentPage(currentPage + 1)
                                     }
                                     style={pageBtnStyle}
-                                    className="btn page-btn flex justify-center items-center"
+                                    className="btn page-btn flex justify-center items-center hover:bg-gray-200"
                                 >
                                     <Icon icon="angle-right" size="lg" />
                                 </button>
@@ -187,7 +187,7 @@ const Pagination = ({
                                         ? { ...pageBtnStyle, ...pageActive }
                                         : pageBtnStyle
                                 }
-                                className="btn page-btn flex justify-center items-center"
+                                className="btn page-btn flex justify-center items-center hover:bg-gray-200"
                             >
                                 {pageIndex}
                             </button>

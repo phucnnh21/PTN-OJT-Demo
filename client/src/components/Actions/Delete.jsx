@@ -1,3 +1,4 @@
+import Tippy from "@tippyjs/react";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
@@ -30,12 +31,11 @@ const Delete = ({ data }) => {
     };
 
     return (
-        <Icon
-            icon="trash"
-            color="rgb(220 38 38)"
-            className="cursor-pointer mx-4"
-            onClick={handleDelete}
-        />
+        <Tippy content="Delete">
+            <button onClick={handleDelete} className="mx-4">
+                <Icon icon="trash" color="rgb(220 38 38)" />
+            </button>
+        </Tippy>
     );
 };
 

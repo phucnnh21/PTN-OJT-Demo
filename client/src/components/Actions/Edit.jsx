@@ -1,15 +1,14 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import React, { useState } from "react";
+import Tippy from "@tippyjs/react";
+import React, { forwardRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { updateApi, viewDetailApi } from "../../api/users-api";
 import { reload } from "../../stores/slices/userFilterSlice";
-import { useLoading } from "../../utils/hooks/useLoading";
 
 import Swal from "../../utils/swal-helpers";
 import yup from "../../utils/yup-config";
-import Button from "../Form/Button";
 import ButtonLoading from "../Form/ButtonLoading";
 import Input from "../Form/Input";
 import Icon from "../Icon";
@@ -40,12 +39,11 @@ const Edit = ({ data }) => {
     };
 
     return (
-        <Icon
-            icon="edit"
-            color="rgb(2 132 199)"
-            className="cursor-pointer"
-            onClick={handleEdit}
-        />
+        <Tippy content="Edit">
+            <button onClick={handleEdit}>
+                <Icon icon="edit" color="rgb(2 132 199)" />
+            </button>
+        </Tippy>
     );
 };
 
@@ -97,7 +95,11 @@ function EditForm({ oldData }) {
                 placeholder="Please enter your Address"
                 register={register("address")}
             />
-            <ButtonLoading className="mt-2.5 block" type="submit">
+            <ButtonLoading
+                className="mt-2.5 block"
+                type="submit"
+                loading={loading}
+            >
                 Edit
             </ButtonLoading>
         </form>
