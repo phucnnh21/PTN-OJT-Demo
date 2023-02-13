@@ -52,7 +52,7 @@ const ChatRoomAdmin = () => {
                 }
             });
         }
-    }, [userFilter]);
+    }, [userFilter, messagesNotifications]);
 
     const showNumberOfNoti = (user) => {
         const numberOfRoomNoti = messagesNotifications.filter(
