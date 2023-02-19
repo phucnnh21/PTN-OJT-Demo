@@ -16,6 +16,7 @@ import PasswordCreate from "./pages/PasswordCreate";
 import { useHubConnection } from "./utils/hooks/useHubConnection";
 import ChatRoom from "./pages/manage/ChatRoom";
 import { useMessagesNotfificatios } from "./utils/hooks/useMessagesNotifications";
+import PowerBiDemo from "./pages/manage/PowerBiDemo";
 
 function App() {
     useHubConnection();
@@ -46,6 +47,8 @@ function App() {
 
                         <Route element={<AdminRouteLayout />}>
                             <Route path="users" element={<ViewUsers />} />
+
+                            <Route path="powerbi" element={<PowerBiDemo />} />
                         </Route>
 
                         <Route

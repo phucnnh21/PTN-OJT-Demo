@@ -32,6 +32,7 @@ const Navbar = ({ className }) => {
     const adminManagePageList = [
         ...managePageList,
         { name: "Manage Users", path: "/manage/users" },
+        { name: "Power BI Report", path: "/manage/powerbi" },
     ];
 
     let pageList =

@@ -49,5 +49,9 @@ function isTokenValid(tokenData, user) {
     if (tokenData.email != user.email) return false;
     if (tokenData.role != user.role) return false;
 
+    // Token expire
+    var current_time = Date.now() / 1000;
+    if (current_time > tokenData.exp) return false;
+
     return true;
 }
