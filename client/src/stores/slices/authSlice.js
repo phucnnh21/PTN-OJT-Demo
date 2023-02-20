@@ -16,6 +16,7 @@ function getInitialAuthState() {
 
     if (!isTokenValid(userDataFromToken, user)) {
         removeUserTokenAndData();
+        return null;
     }
 
     return user;
@@ -52,7 +53,6 @@ function isTokenValid(tokenData, user) {
     // Token expire
     var current_time = Date.now() / 1000;
     if (current_time > tokenData.exp) {
-        console.log("token expired!");
         return false;
     }
 

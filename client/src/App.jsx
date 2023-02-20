@@ -17,10 +17,20 @@ import { useHubConnection } from "./utils/hooks/useHubConnection";
 import ChatRoom from "./pages/manage/ChatRoom";
 import { useMessagesNotfificatios } from "./utils/hooks/useMessagesNotifications";
 import PowerBiDemo from "./pages/manage/PowerBiDemo";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { auth } from "./utils/firebase/firebase-config";
 
 function App() {
     useHubConnection();
     useMessagesNotfificatios();
+
+    const authState = useSelector((state) => state.auth);
+    useEffect(() => {
+        if (!authState) {
+            auth.signOut().catch(() => {});
+        }
+    }, [authState]);
 
     return (
         <>
